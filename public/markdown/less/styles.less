@@ -1,0 +1,179 @@
+/*
+Theme Name: Clear Markdown
+Theme URI: 
+Description: 
+Version: 1.1.1
+Author: Clear
+Author URI:
+*/
+
+// Import 
+// Normalize Less File
+@import "normalize.less";
+
+// Global Less File
+@import "global.less";
+
+// Header
+
+@header-height: 3em;
+.header {
+	height: @header-height;
+	background: rgb(68, 68, 68);
+	color: #fff;
+
+	.logo {
+		line-height: @header-height;
+
+		span {
+			margin-left: 1em;
+			font-size: 1.5em;
+		}
+	}
+
+	&.hidden {
+		height: 0;
+	}
+}
+
+.markdown-panel {
+	.toolbar {
+		position: absolute;
+		top: 1em;
+		right: 1em;
+		height: 2em;
+		line-height: 2em;
+		font-size: 1.5em;
+		z-index: 9999;
+
+		ul {
+			margin: 0;
+			padding: 0;
+			list-style: none;
+		}
+
+		li {
+			display: inline-block;
+			margin: 0 .5em;
+
+			a {
+				display: block;
+				color: rgb(184, 196, 204);
+			}
+			
+
+			&:hover a {
+				color: rgb(120, 132, 141);
+			}
+		}
+	}
+}
+
+
+.markdown-panel,
+.write-wrapper,
+.display-wrapper {
+	height: 100%;
+	position: relative;
+
+	::selection{
+		background: rgb(208, 217, 220);
+	}
+
+	::-moz-selection{
+		background: rgb(208, 217, 220);
+	}
+}
+
+.write-wrapper,
+.display-wrapper {
+	width: 50%;
+	float: left;
+}
+
+@media(max-width: 768px) {
+	.write-wrapper,
+	.display-wrapper {
+		width: 100%;
+		height: 50%;
+		float: none;
+	}
+
+	.write-wrapper {
+		border-bottom: 2px solid #d0d0d0;
+	}
+}
+
+.write-area {
+	width: 100%;
+	min-height: 100%;
+	padding: 1em;
+	border: none;
+	resize: none;
+	background: transparent;
+	outline: none;
+}
+
+.display-wrapper {
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+.display-area {
+	width: 100%;
+	padding: 1em;
+	overflow-y: hidden;
+	overflow-x: hidden;
+}
+
+.change-views {
+
+	.write-wrapper {
+		float: right;
+	}
+}
+
+.write-mode {
+
+	.write-wrapper {
+		width: 100%;
+	}
+
+	.display-wrapper {
+		display: none;
+	}
+}
+
+.read-mode {
+
+	.write-wrapper {
+		display: none;
+	}
+
+	.display-wrapper {
+		width: 100%;
+
+		.display-area {
+			width: 100%;
+			max-width: 1200px;
+			margin: 0 auto;
+		}
+	}
+}
+
+@media(max-width: 768px) {
+
+	.write-mode {
+
+		.write-wrapper {
+			height: 100%;
+		}
+	}
+
+	.read-mode {
+
+		.display-wrapper {
+			height: 100%;
+		}
+	}
+}

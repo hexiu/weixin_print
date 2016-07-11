@@ -1,0 +1,363 @@
+/*
+Theme Name: Clear Markdown
+Theme URI: 
+Description: 
+Version: 1.1.1
+Author: Clear
+Author URI:
+*/
+/*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
+html {
+  font-family: sans-serif;
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  margin: 0;
+}
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+main,
+menu,
+nav,
+section,
+summary {
+  display: block;
+}
+audio,
+canvas,
+progress,
+video {
+  display: inline-block;
+  vertical-align: baseline;
+}
+audio:not([controls]) {
+  display: none;
+  height: 0;
+}
+[hidden],
+template {
+  display: none;
+}
+a {
+  background-color: transparent;
+}
+a:active,
+a:hover {
+  outline: 0;
+}
+abbr[title] {
+  border-bottom: 1px dotted;
+}
+b,
+strong {
+  font-weight: bold;
+}
+dfn {
+  font-style: italic;
+}
+h1 {
+  font-size: 2em;
+  margin: 0.67em 0;
+}
+mark {
+  background: #ff0;
+  color: #000;
+}
+small {
+  font-size: 80%;
+}
+sub,
+sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+sup {
+  top: -0.5em;
+}
+sub {
+  bottom: -0.25em;
+}
+img {
+  border: 0;
+}
+svg:not(:root) {
+  overflow: hidden;
+}
+figure {
+  margin: 1em 40px;
+}
+hr {
+  box-sizing: content-box;
+  height: 0;
+}
+pre {
+  overflow: auto;
+}
+code,
+kbd,
+pre,
+samp {
+  font-family: monospace, monospace;
+  font-size: 1em;
+}
+button,
+input,
+optgroup,
+select,
+textarea {
+  color: inherit;
+  font: inherit;
+  margin: 0;
+}
+button {
+  overflow: visible;
+}
+button,
+select {
+  text-transform: none;
+}
+button,
+html input[type="button"],
+input[type="reset"],
+input[type="submit"] {
+  -webkit-appearance: button;
+  cursor: pointer;
+}
+button[disabled],
+html input[disabled] {
+  cursor: default;
+}
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
+input {
+  line-height: normal;
+}
+input[type="checkbox"],
+input[type="radio"] {
+  box-sizing: border-box;
+  padding: 0;
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  height: auto;
+}
+input[type="search"] {
+  -webkit-appearance: textfield;
+  box-sizing: content-box;
+}
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+fieldset {
+  border: 1px solid #c0c0c0;
+  margin: 0 2px;
+  padding: 0.35em 0.625em 0.75em;
+}
+legend {
+  border: 0;
+  padding: 0;
+}
+textarea {
+  overflow: auto;
+}
+optgroup {
+  font-weight: bold;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+td,
+th {
+  padding: 0;
+}
+* {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+*:before,
+*:after {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+html,
+body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #f9f9f5;
+  font-family: "Segoe UI", "Lucida Grande", Helvetica, Arial, "Microsoft YaHei", FreeSans, Arimo, "Droid Sans", "wenquanyi micro hei", "Hiragino Sans GB", "Hiragino Sans GB W3", Arial, sans-serif;
+  font-style: normal;
+}
+pre {
+  border: none;
+  border-radius: 0;
+  background: #f0f0f0;
+}
+img {
+  width: auto;
+  max-width: 100%;
+  height: auto;
+}
+::-webkit-scrollbar {
+  width: 10px;
+  background: #ebeeec;
+}
+::-webkit-scrollbar-thumb {
+  background: #d0d9dc;
+}
+::-webkit-scrollbar-thumb:active {
+  background: #a9b8c3;
+}
+::selection {
+  color: #000;
+  background: transparent;
+}
+::-moz-selection {
+  color: #000;
+  background: transparent;
+}
+.hidden {
+  display: none;
+}
+.transition {
+  -webkit-transition: all 0.5s;
+  -moz-transition: all 0.5s;
+  -ms-transition: all 0.5s;
+  -o-transition: all 0.5s;
+  transition: all 0.5s;
+}
+.header {
+  height: 3em;
+  background: #444444;
+  color: #fff;
+}
+.header .logo {
+  line-height: 3em;
+}
+.header .logo span {
+  margin-left: 1em;
+  font-size: 1.5em;
+}
+.header.hidden {
+  height: 0;
+}
+.markdown-panel .toolbar {
+  position: absolute;
+  top: 1em;
+  right: 1em;
+  height: 2em;
+  line-height: 2em;
+  font-size: 1.5em;
+  z-index: 9999;
+}
+.markdown-panel .toolbar ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.markdown-panel .toolbar li {
+  display: inline-block;
+  margin: 0 .5em;
+}
+.markdown-panel .toolbar li a {
+  display: block;
+  color: #b8c4cc;
+}
+.markdown-panel .toolbar li:hover a {
+  color: #78848d;
+}
+.markdown-panel,
+.write-wrapper,
+.display-wrapper {
+  height: 100%;
+  position: relative;
+}
+.markdown-panel ::selection,
+.write-wrapper ::selection,
+.display-wrapper ::selection {
+  background: #d0d9dc;
+}
+.markdown-panel ::-moz-selection,
+.write-wrapper ::-moz-selection,
+.display-wrapper ::-moz-selection {
+  background: #d0d9dc;
+}
+.write-wrapper,
+.display-wrapper {
+  width: 50%;
+  float: left;
+}
+@media (max-width: 768px) {
+  .write-wrapper,
+  .display-wrapper {
+    width: 100%;
+    height: 50%;
+    float: none;
+  }
+  .write-wrapper {
+    border-bottom: 2px solid #d0d0d0;
+  }
+}
+.write-area {
+  width: 100%;
+  min-height: 100%;
+  padding: 1em;
+  border: none;
+  resize: none;
+  background: transparent;
+  outline: none;
+}
+.display-wrapper {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.display-area {
+  width: 100%;
+  padding: 1em;
+  overflow-y: hidden;
+  overflow-x: hidden;
+}
+.change-views .write-wrapper {
+  float: right;
+}
+.write-mode .write-wrapper {
+  width: 100%;
+}
+.write-mode .display-wrapper {
+  display: none;
+}
+.read-mode .write-wrapper {
+  display: none;
+}
+.read-mode .display-wrapper {
+  width: 100%;
+}
+.read-mode .display-wrapper .display-area {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+@media (max-width: 768px) {
+  .write-mode .write-wrapper {
+    height: 100%;
+  }
+  .read-mode .display-wrapper {
+    height: 100%;
+  }
+}

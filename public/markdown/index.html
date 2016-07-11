@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<title>Clear Markdown</title>
+
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+	<header class="header">
+		<div class="logo">
+			<span>Clear Markdown</span>
+		</div>
+	</header>
+
+	<section class="markdown-panel">
+		<div class="write-wrapper">
+			<div class="toolbar">
+				<ul>
+					<li>
+						<a href="" title="隐藏工具栏">
+							<i class="fa fa-chevron-circle-up" data-tool="hide-topbar"></i>
+						</a>
+					</li>
+					<li>
+						<a href="" title="编辑模式">
+							<i class="fa fa-desktop" data-tool="write-mode"></i>
+						</a>
+					</li>
+				</ul>
+			</div>
+			<textarea class="write-area" id="write-area"></textarea>
+		</div>
+		<div class="display-wrapper">
+			<div class="toolbar">
+				<ul>
+					<li>
+						<a href="" title="交换左右视图">
+							<i class="fa fa-chevron-circle-left" data-tool="change-views"></i>
+						</a>
+					</li>
+					<li>
+						<a href="" title="阅读模式">
+							<i class="fa fa-desktop" data-tool="read-mode"></i>
+						</a>
+					</li>
+				</ul>
+			</div>
+			<div class="display-area" id="display-area"></div>
+		</div>
+	</section>
+	
+	<script src="js/jquery-1.11.3.js"></script>
+	<script src="js/marked.js"></script>
+	<script src="js/app.js"></script>
+</body>
+</html>

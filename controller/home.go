@@ -6,13 +6,7 @@ import (
 )
 
 func HomeHandler(ctx *macaron.Context, logger *log.Logger) {
+	ctx.Data["TITLE"] = "维宝宝打印系统"
+	ctx.Data["WebSiteName"] = "维宝宝打印系统"
 	ctx.HTML(200, "index")
-}
-
-func FileHandler(ctx *macaron.Context, log *log.Logger) {
-	ctx.HTML(200, "fileup")
-}
-
-func FileUpdateHandler(ctx *macaron.Context, log *log.Logger) {
-	ctx.Redirect("/", 301)
 }

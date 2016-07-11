@@ -1,24 +1,45 @@
 package main
 
 import (
-	// "fmt"
+	"fmt"
 	"github.com/Unknwon/goconfig"
 	// "github.com/go-macaron/gzip"
 	"github.com/go-macaron/session"
 	"gopkg.in/macaron.v1"
-	"log"
-	"macaron/controller"
-	// "macaron/models"
-	"macaron/modules/initConf"
+	// "log"
+	"weixin_dayin/controller"
+	"weixin_dayin/models"
+	// "github.com/go-macaron/binding"
+	// "mime/multipart"
+	// "path"
+	"weixin_dayin/modules/initConf"
+)
+
+const (
+	Port int = 8080
+)
+
+var (
+	port int = Port
 )
 
 var conf *goconfig.ConfigFile
 
 // init Database  &  init Config file
 func init() {
-	// models.RegisterDB()
+	err := models.RegisterDB()
+	if err != nil {
+		fmt.Println("Error : ", err)
+	}
 	conf = initConf.InitConf()
-	// fmt.Println(conf)
+	if err != nil {
+		fmt.Println("Load Config File Error! \t", err)
+	}
+
+	if ok := conf.MustInt("Server", "ListenPort"); ok != 0 {
+		port = ok
+	}
+
 }
 
 func main() {
@@ -30,16 +51,8 @@ func main() {
 	m.Use(session.Sessioner())
 	// Router info
 	m.Get("/", controller.HomeHandler)
-	m.Get("/file", FileHandler)
-	m.Post("/fileup", FileUpdateHandler)
+	m.Get("/file", controller.FileHandler)
+	m.Post("/fileup", controller.UploadHandler)
 
-	m.Run(conf.MustInt("baseconfig", "port"))
-}
-
-func FileHandler(ctx *macaron.Context, log *log.Logger) {
-	ctx.HTML(200, "fileup")
-}
-
-func FileUpdateHandler(ctx *macaron.Context, log *log.Logger) {
-	ctx.Redirect("/", 301)
+	m.Run(port)
 }
