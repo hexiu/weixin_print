@@ -4,13 +4,13 @@ import (
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/go-xorm/xorm"
-	"time"
-	"weixin_dayin/modules/initConf"
+	// "time"
+	"weixin_connect/modules/initConf"
 )
 
 const (
 	DataType = "mysql"
-	Database = "weixin_print"
+	Database = "infomation"
 	Username = "root"
 	Password = "axiu"
 	Host     = "127.0.0.1"
@@ -28,27 +28,6 @@ var (
 
 var engine *xorm.Engine
 
-// Data Struct
-type UserInfo struct {
-	Id       int64
-	Name     string
-	Password string
-	WeiXinID string
-	Created  time.Time `xorm:"index"`
-	Flag     int64
-}
-
-type FileInfo struct {
-	Id         int64
-	UserId     int64
-	WeiXinID   string
-	FileName   string
-	ReFileName string
-	OtherIndo  string
-	Flag       int64
-	Created    time.Time `xorm:"index"`
-}
-
 func init() {
 	err := initconf()
 	if err != nil {
@@ -58,9 +37,12 @@ func init() {
 }
 
 func initconf() (err error) {
-	conf := initConf.InitConf()
+	conf, err := initConf.InitConf()
+	if err != nil {
+		return err
+	}
 
-	// fmt.Println(conf)
+	fmt.Println(conf)
 
 	if ok, err := conf.GetValue("DataControl", "DataType"); err == nil {
 		datatype = ok
@@ -114,14 +96,19 @@ func RegisterDB() (err error) {
 
 	fmt.Println(engine.Ping())
 
-	if ok, _ := engine.IsTableExist("UserInfo"); !ok {
-		engine.CreateTables(new(UserInfo))
+	if ok, _ := engine.IsTableExist("User"); !ok {
+		engine.CreateTables(new(User))
 	}
 
 	if ok, _ := engine.IsTableExist("FileInfo"); !ok {
 		engine.CreateTables(new(FileInfo))
 	}
 
+	if ok, _ := engine.IsTableExist("PayInfo"); !ok {
+		engine.CreateTables(new(PayInfo))
+	}
+
 	defer engine.Close()
 	return nil
+
 }

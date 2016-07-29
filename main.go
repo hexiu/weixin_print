@@ -12,6 +12,8 @@ import (
 	// "github.com/go-macaron/binding"
 	// "mime/multipart"
 	// "path"
+	"log"
+	"os"
 	"weixin_dayin/modules/initConf"
 )
 
@@ -53,6 +55,13 @@ func main() {
 	m.Get("/", controller.HomeHandler)
 	m.Get("/file", controller.FileHandler)
 	m.Post("/fileup", controller.UploadHandler)
+	m.Get("/page1", controller.Page1Handler)
+	m.Get("/page2", controller.Page2Handler)
+
+	err := os.Mkdir("attachment", os.ModePerm)
+	if err != nil {
+		log.Println("Create Directory Error : ", err)
+	}
 
 	m.Run(port)
 }

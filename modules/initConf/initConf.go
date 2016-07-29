@@ -6,7 +6,7 @@ import (
 )
 
 func InitConf() (conf *goconfig.ConfigFile) {
-	conf, err := goconfig.LoadConfigFile("conf/app.ini")
+	conf, err := goconfig.LoadConfigFile("conf/app.conf")
 	if err != nil {
 		fmt.Println(err)
 	}
