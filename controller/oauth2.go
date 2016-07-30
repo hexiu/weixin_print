@@ -6,81 +6,96 @@ import (
 	// "github.com/chanxuehong/rand"
 	// "github.com/chanxuehong/sid"
 	mpoauth2 "github.com/chanxuehong/wechat.v2/mp/oauth2"
+	"github.com/chanxuehong/wechat.v2/mp/user"
 	"github.com/chanxuehong/wechat.v2/oauth2"
-	"github.com/go-macaron/session"
+	// "github.com/go-macaron/session"
 	"gopkg.in/macaron.v1"
 	"io"
 	"log"
 	"net/http"
 	"net/url"
+	"time"
+	"weixin_dayin/models"
+	// "weixin_dayin/modules/initConf"
 )
 
 const (
-	wxAppId           = "wxa9e9c5e110b8665d"               // 填上自己的参数
-	wxAppSecret       = "e9a7f50077fdcbf9b689e629678e244a" // 填上自己的参数
-	oauth2RedirectURI = "http://wxpay.jaxiu.cn/page2"      // 填上自己的参数
-	oauth2Scope       = "snsapi_userinfo"                  // 填上自己的参数
+	oauth2RedirectURI = "http://wxpay.jaxiu.cn/page2" // oauth2 认证通过跳转页面
+	oauth2Scope       = "snsapi_userinfo"             // oauth2 指定获取用户信息的等级
+	WebSiteUrl        = "http://wxpay.jaxiu.cn"
+	Oauth2Url         = "http://wxpay.jaxiu.cn"
 )
 
 var (
-	SessionStorage *session.Manager
-	err            error
-	oauth2Endpoint oauth2.Endpoint = mpoauth2.NewEndpoint(wxAppId, wxAppSecret)
+	userinfo       *mpoauth2.UserInfo                                              //用户oauth2认证登录之后，抓取的用户信息
+	oauth2Endpoint oauth2.Endpoint    = mpoauth2.NewEndpoint(WxAppId, WxAppSecret) //oauth2客户端认证所需的信息
 )
 
-func init() {
-	SessionStorage, err = session.NewManager("memory", session.Options{})
-	if err != nil {
-		log.Println(err)
-	}
-
-}
+var (
+	webSiteUrl        string = WebSiteUrl
+	oauth2Url         string = Oauth2Url
+	Oauth2RedirectURI        = oauth2RedirectURI // oauth2 认证通过跳转页面
+	Oauth2Scope              = oauth2Scope       // oauth2 指定获取用户信息的等级
+)
 
 // 建立必要的 session, 然后跳转到授权页面
 func Page1Handler(ctx *macaron.Context) {
-	fmt.Println("OK............1")
-	// ctx.SetCookie("sid", "1")
+	fmt.Println(ctx.GetCookie(CookieName), "This is Page1 is Cookie")
 	sess, err := SessionStorage.Start(ctx)
+	if err != nil {
+		log.Println(err)
+	}
+	sess, err = SessionStorage.Start(ctx)
+	if err != nil {
+		log.Println(err)
+	}
 	state := sess.ID()
+	fmt.Println("state:", state, sess)
+	fmt.Println("SessionStorage", SessionStorage, SessionStorage.Count())
 
-	fmt.Println(err)
-	fmt.Println(sess, "Ok.......................2")
-
-	// if sess, err := sessionStorage.Start(ctx); err != nil {
-	// 	fmt.Println(sess, "Ok.......................2")
-
-	// 	log.Println(err)
-	// 	io.WriteString(ctx.Resp, err.Error())
-	// } else {
-	// 	fmt.Println(sess, "Ok.......................3")
-
-	// }
-
-	AuthCodeURL := mpoauth2.AuthCodeURL(wxAppId, oauth2RedirectURI, oauth2Scope, state)
+	AuthCodeURL := mpoauth2.AuthCodeURL(WxAppId, oauth2RedirectURI, oauth2Scope, state)
 	log.Println("AuthCodeURL:", AuthCodeURL)
-	fmt.Println("*****************************", AuthCodeURL)
+	fmt.Println("SessionStorage", SessionStorage, SessionStorage.Count())
 
 	ctx.Redirect(AuthCodeURL, http.StatusFound)
+	fmt.Println("SessionStorage", SessionStorage, SessionStorage.Count())
 
 }
 
-// 授权后回调页面
-func Page2Handler(ctx *macaron.Context) {
-	log.Println(ctx.Req.RequestURI)
-	cookie, _ := ctx.Req.Cookie("MacaronSession")
-	fmt.Println("cookie:", cookie)
-	sess, err := SessionStorage.Start(ctx)
+// func PortalPCHandler(ctx *macaron.Context) {
+// 	sess, err := SessionStorage.Start(ctx)
+// 	if err != nil {
+// 		log.Println(err)
+// 	}
+// 	state := sess.ID()
+// 	AuthCodeURL := mpoauth2.AuthCodeURL(WxAppId, oauth2RedirectURI, oauth2Scope, state)
+// 	log.Println("AuthCodeURL:", AuthCodeURL)
+// 	ctx.Redirect(AuthCodeURL, http.StatusFound)
+// }
 
+// 授权后回调页面
+func GetWxInfoHandler(ctx *macaron.Context) {
+	fmt.Println("SessionStorage", SessionStorage, SessionStorage.Count())
+	log.Println(ctx.Req.RequestURI)
+	cookie := ctx.GetCookie(CookieName)
+	fmt.Println("cookie:", cookie)
+
+	fmt.Println("SessionStorage", SessionStorage, SessionStorage.Count())
+
+	sess, err := SessionStorage.Start(ctx)
+	cookie = ctx.GetCookie(CookieName)
+	fmt.Println("cookie2:", cookie)
+
+	fmt.Println("SessionStorage", SessionStorage, SessionStorage.Count())
 	if err != nil {
 		log.Println(err)
 		io.WriteString(ctx.Resp, err.Error())
 		return
 	}
-
+	fmt.Println("Page2:", sess)
 	session := sess.ID()
 
-	// savedState := session.(string)
-	// savedState := session.(string) // 一般是要序列化的, 这里保存在内存所以可以这么做
+	fmt.Println("SessionStorage", SessionStorage, SessionStorage.Count())
 
 	queryValues, err := url.ParseQuery(ctx.Req.URL.RawQuery)
 	if err != nil {
@@ -88,26 +103,22 @@ func Page2Handler(ctx *macaron.Context) {
 		log.Println(err)
 		return
 	}
-
 	code := queryValues.Get("code")
 	if code == "" {
 		log.Println("用户禁止授权")
 		return
 	}
-
 	queryState := queryValues.Get("state")
 	if queryState == "" {
 		log.Println("state 参数为空")
 		return
 	}
-
 	if session != queryState {
 		str := fmt.Sprintf("state 不匹配, session 中的为 %q, url 传递过来的是 %q", session, queryState)
 		io.WriteString(ctx.Resp, str)
 		log.Println(str)
 		return
 	}
-
 	oauth2Client := oauth2.Client{
 		Endpoint: oauth2Endpoint,
 	}
@@ -119,109 +130,78 @@ func Page2Handler(ctx *macaron.Context) {
 	}
 	log.Printf("token: %+v\r\n", token)
 
-	userinfo, err := mpoauth2.GetUserInfo(token.AccessToken, token.OpenId, "", nil)
+	userinfo, err = mpoauth2.GetUserInfo(token.AccessToken, token.OpenId, "", nil)
 	if err != nil {
-		io.WriteString(ctx.Resp, err.Error())
+		// io.WriteString(ctx.Resp, err.Error())
 		log.Println(err)
 		return
 	}
-
 	json.NewEncoder(ctx.Resp).Encode(userinfo)
 	log.Printf("userinfo: %+v\r\n", userinfo)
+
+	ctx.Redirect("/file", 301)
 	return
 }
 
-// // 建立必要的 session, 然后跳转到授权页面
-// func Page1Handler(w http.ResponseWriter, r *http.Request) {
-// 	sid := sid.New()
-// 	state := string(rand.NewHex())
-
-// 	if err := sessionStorage.Add(sid, state); err != nil {
-// 		io.WriteString(w, err.Error())
-// 		log.Println(err)
-// 		return
-// 	}
-
-// 	cookie := http.Cookie{
-// 		Name:     "sid",
-// 		Value:    sid,
-// 		HttpOnly: true,
-// 	}
-// 	http.SetCookie(w, &cookie)
-
-// 	AuthCodeURL := mpoauth2.AuthCodeURL(wxAppId, oauth2RedirectURI, oauth2Scope, state)
-// 	log.Println("AuthCodeURL:", AuthCodeURL)
-
-// 	http.Redirect(w, r, AuthCodeURL, http.StatusFound)
-// }
-
-// // 授权后回调页面
-// func Page2Handler(w http.ResponseWriter, r *http.Request) {
-// 	log.Println(r.RequestURI)
-
-// 	cookie, err := r.Cookie("sid")
-// 	if err != nil {
-// 		io.WriteString(w, err.Error())
-// 		log.Println(err)
-// 		return
-// 	}
-
-// 	session, err := sessionStorage.Get(cookie.Value)
-// 	if err != nil {
-// 		io.WriteString(w, err.Error())
-// 		log.Println(err)
-// 		return
-// 	}
-
-// 	savedState := session.(string) // 一般是要序列化的, 这里保存在内存所以可以这么做
-
-// 	queryValues, err := url.ParseQuery(r.URL.RawQuery)
-// 	if err != nil {
-// 		io.WriteString(w, err.Error())
-// 		log.Println(err)
-// 		return
-// 	}
-
-// 	code := queryValues.Get("code")
-// 	if code == "" {
-// 		log.Println("用户禁止授权")
-// 		return
-// 	}
-
-// 	queryState := queryValues.Get("state")
-// 	if queryState == "" {
-// 		log.Println("state 参数为空")
-// 		return
-// 	}
-// 	if savedState != queryState {
-// 		str := fmt.Sprintf("state 不匹配, session 中的为 %q, url 传递过来的是 %q", savedState, queryState)
-// 		io.WriteString(w, str)
-// 		log.Println(str)
-// 		return
-// 	}
-
-// 	oauth2Client := oauth2.Client{
-// 		Endpoint: oauth2Endpoint,
-// 	}
-// 	token, err := oauth2Client.ExchangeToken(code)
-// 	if err != nil {
-// 		io.WriteString(w, err.Error())
-// 		log.Println(err)
-// 		return
-// 	}
-// 	log.Printf("token: %+v\r\n", token)
-
-// 	userinfo, err := mpoauth2.GetUserInfo(token.AccessToken, token.OpenId, "", nil)
-// 	if err != nil {
-// 		io.WriteString(w, err.Error())
-// 		log.Println(err)
-// 		return
-// 	}
-
-// 	json.NewEncoder(w).Encode(userinfo)
-// 	log.Printf("userinfo: %+v\r\n", userinfo)
-// 	return
-// }
-
 //
-// //
+func UserAddHandler(openid string) (err error) {
+	// newuser := models.NewUser()
+
+	ok, err := JudgeUser(openid, "")
+	if ok == false && err != nil {
+		return err
+	}
+	if ok == true {
+		return nil
+	} else {
+		newuser := new(models.User)
+		newuser.OpenId = userinfo.OpenId
+		newuser.CreateTime = time.Now().Unix()
+		newuser.Flag = 0
+		newuser.UpdateTime = time.Now().Unix()
+		newuser.PrintFileNum = 0
+		newuser.NotPrintFile = 0
+		newuser.UploadFileNum = 0
+		newuser.TotalConsumption = 0
+		userinfoUpdate, err := userUpdateFromWeiXin(newuser.OpenId, "zh_CN")
+
+		if err != nil {
+			log.Println("controller UserHandler userUpdateFromWeiXin Error : ", err)
+		}
+		newuser.Nickname = userinfoUpdate.Nickname
+		newuser.Sex = userinfoUpdate.Sex
+		newuser.Country = userinfoUpdate.Country
+		newuser.City = userinfoUpdate.City
+		newuser.Language = userinfoUpdate.Language
+
+		err = models.AddUser(newuser)
+		if err != nil {
+			log.Println("Controller UserHander AddUser Error : ", err)
+		}
+		log.Println(newuser)
+	}
+	return nil
+}
+
+// 网站用户添加模块
+func userUpdateFromWeiXin(openId string, lang string) (userinfoUpdate *user.UserInfo, err error) {
+	userinfoUpdate = new(user.UserInfo)
+	userinfoUpdate, err = user.Get(Client, openId, lang)
+	if err != nil {
+		log.Println("controller UserHandler userUpdateFromWeiXin Error : ", err)
+		return nil, err
+	}
+	return userinfoUpdate, nil
+}
+
+func JudgeUser(openid string, wid string) (has bool, err error) {
+	newuser := &models.User{
+		OpenId: openid,
+		Wid:    wid,
+	}
+	has, err = models.JudgeUser(newuser)
+	if err != nil && has == false {
+		return false, err
+	}
+	return true, nil
+}

@@ -2,6 +2,7 @@ package controller
 
 import (
 	"fmt"
+	// "github.com/go-macaron/session"
 	"gopkg.in/macaron.v1"
 	"log"
 	"os"
@@ -9,13 +10,31 @@ import (
 	"weixin_dayin/models"
 )
 
-var user *models.User
+var newuser *models.User
 
 func FileHandler(ctx *macaron.Context, log *log.Logger) {
-	ctx.HTML(200, "fileup")
+	sid := ctx.GetCookie("WxPaySession")
+	Sess, err := SessionStorage.Start(ctx)
+	if err != nil {
+		log.Println(err)
+	}
+	if sid == Sess.ID() {
+		ctx.HTML(200, "index")
+	} else {
+		ctx.Redirect("/", 301)
+	}
 }
 
 func UploadHandler(ctx *macaron.Context) string {
+	sid := ctx.GetCookie("WxPaySession")
+	Sess, err := SessionStorage.Start(ctx)
+	if err != nil {
+		log.Println(err)
+		return "<h1>你还没有登录哦！</h1> <br> <a href=\"" + "http://wxpay.jaxiu.cn" + "\">点这里跳回主页</a>"
+	}
+	if sid != Sess.ID() {
+		ctx.Redirect("/", 301)
+	}
 
 	// fmt.Println(uf.TextUpload.Filename)
 	fmt.Println("test")
@@ -48,7 +67,7 @@ func UploadHandler(ctx *macaron.Context) string {
 }
 
 func GetUser(openid string, wid string) (err error) {
-	user, err = models.GetUser(openid, wid)
+	newuser, err = models.GetUser(openid, wid)
 	if err != nil {
 		return err
 	}

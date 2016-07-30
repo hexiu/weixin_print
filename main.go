@@ -33,7 +33,7 @@ func init() {
 	if err != nil {
 		fmt.Println("Error : ", err)
 	}
-	conf = initConf.InitConf()
+	conf, err = initConf.InitConf()
 	if err != nil {
 		fmt.Println("Load Config File Error! \t", err)
 	}
@@ -52,11 +52,12 @@ func main() {
 	m.Use(macaron.Recovery())
 	m.Use(session.Sessioner())
 	// Router info
+
+	m.Get("/page1", controller.Page1Handler)
+	m.Get("/page2", controller.GetWxInfoHandler)
 	m.Get("/", controller.HomeHandler)
 	m.Get("/file", controller.FileHandler)
 	m.Post("/fileup", controller.UploadHandler)
-	m.Get("/page1", controller.Page1Handler)
-	m.Get("/page2", controller.Page2Handler)
 
 	err := os.Mkdir("attachment", os.ModePerm)
 	if err != nil {

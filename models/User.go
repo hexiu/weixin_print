@@ -7,28 +7,29 @@ import (
 )
 
 type User struct {
-	Uid                int64 `xorm:"index" autoincr`
-	Wid                string
-	OpenId             string `xorm:"index"`
-	Username           string
-	Password           string
-	Email              string
-	Telnumber          string
-	TotalConsumption   float64
-	FileSavePath       string
-	UploadFileNum      int64
-	PrintFileNum       int64
-	CreateTime         int64 `xorm:"index"`
-	UpdateTime         int64 `xorm:"index"`
-	NearUpdateFileTime int64 `xorm:"index"`
-	NotPrintFile       int
-	Flag               int
-	Nickname           string
-	Sex                int
-	Language           string
-	City               string
-	Province           string
-	Country            string
+	Uid                int64   `xorm:"index" autoincr` //用户唯一标识自增ID，方便管理
+	Wid                string  //微信公众号标识ID
+	OpenId             string  `xorm:"index"` //用户对于公众号的唯一标识ID
+	Username           string  //用户名（说明：姓名）
+	Password           string  //用户密码（留用）
+	Email              string  //用户邮箱
+	Telnumber          string  //用户手机
+	TotalConsumption   float64 //用户消费的总额度
+	FileSavePath       string  //用户文件存放地址
+	UploadFileNum      int64   //用户上传文件总数
+	PrintFileNum       int64   //用户已打印文件数
+	CreateTime         int64   `xorm:"index"` //用户创建时间
+	UpdateTime         int64   `xorm:"index"` //用户信息更新时间
+	NearUpdateFileTime int64   `xorm:"index"` //用户最近一次更新上传文件的时间
+	NotPrintFile       int     //没有打印的文件
+	Flag               int     //一个标识符（备用）
+	Nickname           string  //用户微信昵称
+	Sex                int     //用户微信性别
+	Language           string  //用户微信所用语言
+	City               string  //用户所在城市
+	Province           string  //用户省市
+	Country            string  //用户所在国家
+	IsSubscriber       int     //用户是否关注了微信号
 }
 
 func (user *User) GetCreateTime() int64 {
