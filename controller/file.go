@@ -13,28 +13,28 @@ import (
 var newuser *models.User
 
 func FileHandler(ctx *macaron.Context, log *log.Logger) {
-	sid := ctx.GetCookie("WxPaySession")
-	Sess, err := SessionStorage.Start(ctx)
-	if err != nil {
-		log.Println(err)
-	}
-	if sid == Sess.ID() {
-		ctx.HTML(200, "index")
-	} else {
-		ctx.Redirect("/", 301)
-	}
+	// sid := ctx.GetCookie("WxPaySession")
+	// Sess, err := SessionStorage.Start(ctx)
+	// if err != nil {
+	// 	log.Println(err)
+	// // }
+	// if sid == Sess.ID() {
+	ctx.HTML(200, "index")
+	// } else {
+	// 	ctx.Redirect("/", 301)
+	// }
 }
 
 func UploadHandler(ctx *macaron.Context) string {
-	sid := ctx.GetCookie("WxPaySession")
-	Sess, err := SessionStorage.Start(ctx)
-	if err != nil {
-		log.Println(err)
-		return "<h1>你还没有登录哦！</h1> <br> <a href=\"" + "http://wxpay.jaxiu.cn" + "\">点这里跳回主页</a>"
-	}
-	if sid != Sess.ID() {
-		ctx.Redirect("/", 301)
-	}
+	// sid := ctx.GetCookie("WxPaySession")
+	// Sess, err := SessionStorage.Start(ctx)
+	// if err != nil {
+	// 	log.Println(err)
+	// 	return "<h1>你还没有登录哦！</h1> <br> <a href=\"" + "http://wxpay.jaxiu.cn" + "\">点这里跳回主页</a>"
+	// }
+	// if sid != Sess.ID() {
+	// 	ctx.Redirect("/", 301)
+	// }
 
 	// fmt.Println(uf.TextUpload.Filename)
 	fmt.Println("test")

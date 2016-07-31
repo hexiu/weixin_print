@@ -8,7 +8,7 @@ import (
 	mpoauth2 "github.com/chanxuehong/wechat.v2/mp/oauth2"
 	"github.com/chanxuehong/wechat.v2/mp/user"
 	"github.com/chanxuehong/wechat.v2/oauth2"
-	// "github.com/go-macaron/session"
+	"github.com/go-macaron/session"
 	"gopkg.in/macaron.v1"
 	"io"
 	"log"
@@ -27,8 +27,11 @@ const (
 )
 
 var (
-	userinfo       *mpoauth2.UserInfo                                              //用户oauth2认证登录之后，抓取的用户信息
-	oauth2Endpoint oauth2.Endpoint    = mpoauth2.NewEndpoint(WxAppId, WxAppSecret) //oauth2客户端认证所需的信息
+	// SessionStorage *session.Manager
+	// SessionMange   *session.MemProvider
+	// sess           session.Store                                                   // 全局Session管理器
+	userinfo       *mpoauth2.UserInfo //用户oauth2认证登录之后，抓取的用户信息
+	oauth2Endpoint oauth2.Endpoint    //oauth2客户端认证所需的信息
 )
 
 var (
@@ -39,27 +42,52 @@ var (
 )
 
 // 建立必要的 session, 然后跳转到授权页面
-func Page1Handler(ctx *macaron.Context) {
-	fmt.Println(ctx.GetCookie(CookieName), "This is Page1 is Cookie")
-	sess, err := SessionStorage.Start(ctx)
+func Page1Handler(ctx *macaron.Context, sess session.Store) {
+	// fmt.Println("OK............1")
+	// // ctx.SetCookie("sid", "1")
+	// sess, err := SessionStorage.Start(ctx)
+	// state := sess.ID()
+
+	// fmt.Println(err)
+	// fmt.Println(sess, "Ok.......................2")
+
+	// // if sess, err := sessionStorage.Start(ctx); err != nil {
+	// // 	fmt.Println(sess, "Ok.......................2")
+
+	// // 	log.Println(err)
+	// // 	io.WriteString(ctx.Resp, err.Error())
+	// // } else {
+	// // 	fmt.Println(sess, "Ok.......................3")
+
+	// // }
+
+	// AuthCodeURL := mpoauth2.AuthCodeURL(WxAppId, Oauth2RedirectURI, Oauth2Scope, state)
+	// log.Println("AuthCodeURL:", AuthCodeURL)
+	// fmt.Println("*****************************", AuthCodeURL)
+
+	// ctx.Redirect(AuthCodeURL, http.StatusFound)
+	// //=================================================
+	fmt.Println(ctx.GetCookie(cookieName), cookieName, "This is Page1 is Cookie")
+
 	if err != nil {
 		log.Println(err)
 	}
-	sess, err = SessionStorage.Start(ctx)
-	if err != nil {
-		log.Println(err)
-	}
+
+	// ctx.Req.AddCookie(cookieName, sess.ID())
+	// sess.Set(cookieName, sess.ID())
+
+	fmt.Println(ctx.Req.Cookies(), sess.Count())
+	ctx.SetCookie(CookieName, sess.ID())
 	state := sess.ID()
-	fmt.Println("state:", state, sess)
-	fmt.Println("SessionStorage", SessionStorage, SessionStorage.Count())
+	// ctx.SetCookie(cookieName, sess.ID())
+	// sess.Set(cookieName, sess.ID())
+	fmt.Println(ctx.Req.Cookies(), sess.Count())
 
 	AuthCodeURL := mpoauth2.AuthCodeURL(WxAppId, oauth2RedirectURI, oauth2Scope, state)
 	log.Println("AuthCodeURL:", AuthCodeURL)
-	fmt.Println("SessionStorage", SessionStorage, SessionStorage.Count())
 
 	ctx.Redirect(AuthCodeURL, http.StatusFound)
-	fmt.Println("SessionStorage", SessionStorage, SessionStorage.Count())
-
+	// return
 }
 
 // func PortalPCHandler(ctx *macaron.Context) {
@@ -74,33 +102,27 @@ func Page1Handler(ctx *macaron.Context) {
 // }
 
 // 授权后回调页面
-func GetWxInfoHandler(ctx *macaron.Context) {
-	fmt.Println("SessionStorage", SessionStorage, SessionStorage.Count())
+func GetWxInfoHandler(ctx *macaron.Context, sess session.Store) {
+	fmt.Println(ctx.GetCookie(cookieName), cookieName, "This is Page2 is Cookie")
+
+	// fmt.Println("SessionStorage", SessionStorage, SessionStorage.Count())
 	log.Println(ctx.Req.RequestURI)
-	cookie := ctx.GetCookie(CookieName)
-	fmt.Println("cookie:", cookie)
+	cookie, err := ctx.Req.Cookie(CookieName)
+	fmt.Println("cookie:", cookieName, cookie)
+	fmt.Println(ctx.Req.Cookies(), sess.Count())
+	fmt.Println(cookieName, " : ", sess.Get(cookieName))
+	fmt.Println("SessionStorage", sess.Count(), sess.ID())
 
-	fmt.Println("SessionStorage", SessionStorage, SessionStorage.Count())
+	// state = sess.ID()
 
-	sess, err := SessionStorage.Start(ctx)
-	cookie = ctx.GetCookie(CookieName)
-	fmt.Println("cookie2:", cookie)
-
-	fmt.Println("SessionStorage", SessionStorage, SessionStorage.Count())
-	if err != nil {
-		log.Println(err)
-		io.WriteString(ctx.Resp, err.Error())
-		return
-	}
 	fmt.Println("Page2:", sess)
-	session := sess.ID()
-
-	fmt.Println("SessionStorage", SessionStorage, SessionStorage.Count())
+	sessionid := ctx.GetCookie(CookieName)
+	fmt.Println(sessionid, sess.Count())
 
 	queryValues, err := url.ParseQuery(ctx.Req.URL.RawQuery)
 	if err != nil {
 		io.WriteString(ctx.Resp, err.Error())
-		log.Println(err)
+		log.Println(err, "QueryValues")
 		return
 	}
 	code := queryValues.Get("code")
@@ -113,12 +135,14 @@ func GetWxInfoHandler(ctx *macaron.Context) {
 		log.Println("state 参数为空")
 		return
 	}
-	if session != queryState {
-		str := fmt.Sprintf("state 不匹配, session 中的为 %q, url 传递过来的是 %q", session, queryState)
+	if sessionid != queryState {
+		str := fmt.Sprintf("state 不匹配, session 中的为 %q, url 传递过来的是 %q", sessionid, queryState)
 		io.WriteString(ctx.Resp, str)
 		log.Println(str)
 		return
 	}
+	fmt.Println(queryState, sessionid)
+	oauth2Endpoint = mpoauth2.NewEndpoint(WxAppId, WxAppSecret)
 	oauth2Client := oauth2.Client{
 		Endpoint: oauth2Endpoint,
 	}

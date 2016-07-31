@@ -8,7 +8,7 @@ import (
 	// mpoauth2 "github.com/chanxuehong/wechat.v2/mp/oauth2"
 	"github.com/chanxuehong/wechat.v2/mp/core"
 	// "github.com/chanxuehong/wechat.v2/oauth2"
-	"github.com/go-macaron/session"
+	// "github.com/go-macaron/session"
 	// "gopkg.in/macaron.v1"
 	// "io"
 	"log"
@@ -26,7 +26,7 @@ const (
 	// 提供器的配置，根据提供器而不同
 	ProviderConfig = ""
 	// 用于存放会话 ID 的 Cookie 名称，默认为 "MacaronSession"
-	CookieName = "MacaronSession"
+	CookieName = "WxPaySession"
 	// Cookie 储存路径，默认为 "/"
 	CookiePath = "/"
 	// GC 执行时间间隔，默认为 3600 秒
@@ -71,8 +71,7 @@ var (
 )
 
 var (
-	SessionStorage *session.Manager // 全局Session管理器
-	err            error
+	err error
 )
 
 func init() {
@@ -200,34 +199,37 @@ func init() {
 	// 	log.Println(err)
 	// }
 
-	SessionStorage, err = session.NewManager("memory", session.Options{
-		Provider: "memory",
-		// 提供器的配置，根据提供器而不同
-		ProviderConfig: providerConfig,
-		// 用于存放会话 ID 的 Cookie 名称，默认为 "MacaronSession"
-		CookieName: cookieName,
-		// Cookie 储存路径，默认为 "/"
-		CookiePath: cookiePath,
-		// GC 执行时间间隔，默认为 3600 秒
-		Gclifetime: gclifetime,
-		// 最大生存时间，默认和 GC 执行时间间隔相同
-		Maxlifetime: maxlifetime,
-		// 仅限使用 HTTPS，默认为 false
-		Secure: secure,
-		// Cookie 生存时间，默认为 0 秒
-		CookieLifeTime: cookieLifeTime,
-		// Cookie 储存域名，默认为空
-		Domain: domain,
-		// 会话 ID 长度，默认为 16 位
-		IDLength: iDLength,
-		// 配置分区名称，默认为 "session"
-		Section: section})
-	if err != nil {
-		log.Println(err)
-	}
+	// SessionStorage, err = session.NewManager("memory", session.Options{
+	// 	Provider: "memory",
+	// 	// 提供器的配置，根据提供器而不同
+	// 	// ProviderConfig: providerConfig,
+	// 	// 用于存放会话 ID 的 Cookie 名称，默认为 "MacaronSession"
+	// 	CookieName: cookieName,
+	// 	// Cookie 储存路径，默认为 "/"
+	// 	CookiePath: cookiePath,
+	// 	// GC 执行时间间隔，默认为 3600 秒
+	// 	Gclifetime: gclifetime,
+	// 	// 最大生存时间，默认和 GC 执行时间间隔相同
+	// 	Maxlifetime: maxlifetime,
+	// 	// 仅限使用 HTTPS，默认为 false
+	// 	Secure: secure,
+	// 	// Cookie 生存时间，默认为 0 秒
+	// 	CookieLifeTime: cookieLifeTime,
+	// 	// Cookie 储存域名，默认为空
+	// 	Domain: domain,
+	// 	// 会话 ID 长度，默认为 16 位
+	// 	IDLength: iDLength,
+	// 	// 配置分区名称，默认为 "session"
+	// 	Section: section,
+	// })
+	// if err != nil {
+	// 	log.Println(err)
+	// }
 
-	fmt.Println("SessionStorage :", SessionStorage, SessionStorage.Count())
-	go SessionStorage.GC()
+	// fmt.Println("SessionStorage :", SessionStorage, SessionStorage.Count())
+	// go SessionStorage.GC()
+	// SessionMange = SessionStorage
+	// sess.GC()
 }
 
 func test() {
