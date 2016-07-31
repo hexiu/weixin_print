@@ -5,7 +5,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/go-xorm/xorm"
 	// "time"
-	"weixin_connect/modules/initConf"
+	"weixin_dayin/modules/initConf"
 )
 
 const (
@@ -29,11 +29,7 @@ var (
 var engine *xorm.Engine
 
 func init() {
-	err := initconf()
-	if err != nil {
-		fmt.Println(err)
-	}
-
+	initconf()
 }
 
 func initconf() (err error) {

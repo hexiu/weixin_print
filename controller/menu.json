@@ -1,0 +1,18 @@
+{
+     "button":[
+     {	
+          "type":"click",
+          "name":"今日歌曲2",
+          "key":"V1001_TODAY_MUSIC"
+      },
+      {
+           "name":"菜单2",
+           "sub_button":[
+           {	
+               "type":"view",
+               "name":"oauth2",
+               "url":"blog.jaxiu.cn"
+            }
+          ]
+       }]
+ }

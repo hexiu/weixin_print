@@ -4,7 +4,7 @@ import (
 	// "encoding/json"
 	"fmt"
 	// "github.com/chanxuehong/wechat.v2/mp/base"
-	"github.com/chanxuehong/wechat.v2/mp/core"
+	// "github.com/chanxuehong/wechat.v2/mp/core"
 	// "github.com/chanxuehong/wechat.v2/mp/menu"
 	// "io/ioutil"
 	"github.com/Unknwon/goconfig"
@@ -24,11 +24,6 @@ var (
 	WxOriId         string = ""
 	WxToken         string
 	WxEncodedAESKey string = ""
-)
-
-var (
-	TokenServer core.AccessTokenServer
-	Client      *core.Client
 )
 
 // var (

@@ -18,6 +18,8 @@ import (
 	"strconv"
 	"weixin_dayin/modules/initConf"
 	// "weixin_dayin/models"
+	"github.com/chanxuehong/wechat.v2/mp/menu"
+	"github.com/chanxuehong/wechat.v2/mp/message/callback/request"
 )
 
 const (
@@ -189,10 +191,20 @@ func init() {
 
 	initconf()
 
+	mux := core.NewServeMux()
+	mux.DefaultMsgHandleFunc(defaultMsgHandler)
+	mux.DefaultEventHandleFunc(defaultEventHandler)
+	mux.MsgHandleFunc(request.MsgTypeText, textMsgHandler)
+	mux.EventHandleFunc(menu.EventTypeClick, menuClickEventHandler)
+
+	msgHandler = mux
+	msgServer = core.NewServer(WxOriId, WxAppId, WxToken, WxEncodedAESKey, msgHandler, nil)
+	fmt.Println(msgServer)
+
 	TokenServer = core.NewDefaultAccessTokenServer(WxAppId, WxAppSecret, nil)
 	Client = core.NewClient(TokenServer, http.DefaultClient)
 	fmt.Println(WxAppSecret, WxAppId, TokenServer)
-
+	CreateMenu()
 	// SessionStorage, err = session.NewManager("memory", session.Options{})
 	// fmt.Println("Test:", SessionStorage, err)
 	// if err != nil {

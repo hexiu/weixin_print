@@ -6,7 +6,7 @@ import (
 	// "github.com/chanxuehong/rand"
 	// "github.com/chanxuehong/sid"
 	mpoauth2 "github.com/chanxuehong/wechat.v2/mp/oauth2"
-	"github.com/chanxuehong/wechat.v2/mp/user"
+	// "github.com/chanxuehong/wechat.v2/mp/user"
 	"github.com/chanxuehong/wechat.v2/oauth2"
 	"github.com/go-macaron/session"
 	"gopkg.in/macaron.v1"
@@ -14,8 +14,8 @@ import (
 	"log"
 	"net/http"
 	"net/url"
-	"time"
-	"weixin_dayin/models"
+	// "time"
+	// "weixin_dayin/models"
 	// "weixin_dayin/modules/initConf"
 )
 
@@ -43,51 +43,20 @@ var (
 
 // 建立必要的 session, 然后跳转到授权页面
 func Page1Handler(ctx *macaron.Context, sess session.Store) {
-	// fmt.Println("OK............1")
-	// // ctx.SetCookie("sid", "1")
-	// sess, err := SessionStorage.Start(ctx)
-	// state := sess.ID()
-
-	// fmt.Println(err)
-	// fmt.Println(sess, "Ok.......................2")
-
-	// // if sess, err := sessionStorage.Start(ctx); err != nil {
-	// // 	fmt.Println(sess, "Ok.......................2")
-
-	// // 	log.Println(err)
-	// // 	io.WriteString(ctx.Resp, err.Error())
-	// // } else {
-	// // 	fmt.Println(sess, "Ok.......................3")
-
-	// // }
-
-	// AuthCodeURL := mpoauth2.AuthCodeURL(WxAppId, Oauth2RedirectURI, Oauth2Scope, state)
-	// log.Println("AuthCodeURL:", AuthCodeURL)
-	// fmt.Println("*****************************", AuthCodeURL)
-
-	// ctx.Redirect(AuthCodeURL, http.StatusFound)
-	// //=================================================
-	fmt.Println(ctx.GetCookie(cookieName), cookieName, "This is Page1 is Cookie")
+	// fmt.Println(ctx.GetCookie(cookieName), cookieName, "This is Page1 is Cookie")
 
 	if err != nil {
 		log.Println(err)
 	}
-
-	// ctx.Req.AddCookie(cookieName, sess.ID())
-	// sess.Set(cookieName, sess.ID())
-
-	fmt.Println(ctx.Req.Cookies(), sess.Count())
+	// fmt.Println(ctx.Req.Cookies(), sess.Count())
 	ctx.SetCookie(CookieName, sess.ID())
 	state := sess.ID()
-	// ctx.SetCookie(cookieName, sess.ID())
-	// sess.Set(cookieName, sess.ID())
-	fmt.Println(ctx.Req.Cookies(), sess.Count())
+	// fmt.Println(ctx.Req.Cookies(), sess.Count())
 
 	AuthCodeURL := mpoauth2.AuthCodeURL(WxAppId, oauth2RedirectURI, oauth2Scope, state)
 	log.Println("AuthCodeURL:", AuthCodeURL)
 
 	ctx.Redirect(AuthCodeURL, http.StatusFound)
-	// return
 }
 
 // func PortalPCHandler(ctx *macaron.Context) {
@@ -107,17 +76,17 @@ func GetWxInfoHandler(ctx *macaron.Context, sess session.Store) {
 
 	// fmt.Println("SessionStorage", SessionStorage, SessionStorage.Count())
 	log.Println(ctx.Req.RequestURI)
-	cookie, err := ctx.Req.Cookie(CookieName)
-	fmt.Println("cookie:", cookieName, cookie)
-	fmt.Println(ctx.Req.Cookies(), sess.Count())
-	fmt.Println(cookieName, " : ", sess.Get(cookieName))
-	fmt.Println("SessionStorage", sess.Count(), sess.ID())
+	// cookie, err := ctx.Req.Cookie(CookieName)
+	// fmt.Println("cookie:", cookieName, cookie)
+	// fmt.Println(ctx.Req.Cookies(), sess.Count())
+	// fmt.Println(cookieName, " : ", sess.Get(cookieName))
+	// fmt.Println("SessionStorage", sess.Count(), sess.ID())
 
 	// state = sess.ID()
 
-	fmt.Println("Page2:", sess)
+	// fmt.Println("Page2:", sess)
 	sessionid := ctx.GetCookie(CookieName)
-	fmt.Println(sessionid, sess.Count())
+	// fmt.Println(sessionid, sess.Count())
 
 	queryValues, err := url.ParseQuery(ctx.Req.URL.RawQuery)
 	if err != nil {
@@ -141,7 +110,7 @@ func GetWxInfoHandler(ctx *macaron.Context, sess session.Store) {
 		log.Println(str)
 		return
 	}
-	fmt.Println(queryState, sessionid)
+	// fmt.Println(queryState, sessionid)
 	oauth2Endpoint = mpoauth2.NewEndpoint(WxAppId, WxAppSecret)
 	oauth2Client := oauth2.Client{
 		Endpoint: oauth2Endpoint,
@@ -168,64 +137,64 @@ func GetWxInfoHandler(ctx *macaron.Context, sess session.Store) {
 }
 
 //
-func UserAddHandler(openid string) (err error) {
-	// newuser := models.NewUser()
+// func UserAddHandler(openid string) (err error) {
+// 	// newuser := models.NewUser()
 
-	ok, err := JudgeUser(openid, "")
-	if ok == false && err != nil {
-		return err
-	}
-	if ok == true {
-		return nil
-	} else {
-		newuser := new(models.User)
-		newuser.OpenId = userinfo.OpenId
-		newuser.CreateTime = time.Now().Unix()
-		newuser.Flag = 0
-		newuser.UpdateTime = time.Now().Unix()
-		newuser.PrintFileNum = 0
-		newuser.NotPrintFile = 0
-		newuser.UploadFileNum = 0
-		newuser.TotalConsumption = 0
-		userinfoUpdate, err := userUpdateFromWeiXin(newuser.OpenId, "zh_CN")
+// 	ok, err := JudgeUser(openid, "")
+// 	if ok == false && err != nil {
+// 		return err
+// 	}
+// 	if ok == true {
+// 		return nil
+// 	} else {
+// 		newuser := new(models.User)
+// 		newuser.OpenId = userinfo.OpenId
+// 		newuser.CreateTime = time.Now().Unix()
+// 		newuser.Flag = 0
+// 		newuser.UpdateTime = time.Now().Unix()
+// 		newuser.PrintFileNum = 0
+// 		newuser.NotPrintFile = 0
+// 		newuser.UploadFileNum = 0
+// 		newuser.TotalConsumption = 0
+// 		userinfoUpdate, err := userUpdateFromWeiXin(newuser.OpenId, "zh_CN")
 
-		if err != nil {
-			log.Println("controller UserHandler userUpdateFromWeiXin Error : ", err)
-		}
-		newuser.Nickname = userinfoUpdate.Nickname
-		newuser.Sex = userinfoUpdate.Sex
-		newuser.Country = userinfoUpdate.Country
-		newuser.City = userinfoUpdate.City
-		newuser.Language = userinfoUpdate.Language
+// 		if err != nil {
+// 			log.Println("controller UserHandler userUpdateFromWeiXin Error : ", err)
+// 		}
+// 		newuser.Nickname = userinfoUpdate.Nickname
+// 		newuser.Sex = userinfoUpdate.Sex
+// 		newuser.Country = userinfoUpdate.Country
+// 		newuser.City = userinfoUpdate.City
+// 		newuser.Language = userinfoUpdate.Language
 
-		err = models.AddUser(newuser)
-		if err != nil {
-			log.Println("Controller UserHander AddUser Error : ", err)
-		}
-		log.Println(newuser)
-	}
-	return nil
-}
+// 		err = models.AddUser(newuser)
+// 		if err != nil {
+// 			log.Println("Controller UserHander AddUser Error : ", err)
+// 		}
+// 		log.Println(newuser)
+// 	}
+// 	return nil
+// }
 
-// 网站用户添加模块
-func userUpdateFromWeiXin(openId string, lang string) (userinfoUpdate *user.UserInfo, err error) {
-	userinfoUpdate = new(user.UserInfo)
-	userinfoUpdate, err = user.Get(Client, openId, lang)
-	if err != nil {
-		log.Println("controller UserHandler userUpdateFromWeiXin Error : ", err)
-		return nil, err
-	}
-	return userinfoUpdate, nil
-}
+// // 网站用户添加模块
+// func userUpdateFromWeiXin(openId string, lang string) (userinfoUpdate *user.UserInfo, err error) {
+// 	userinfoUpdate = new(user.UserInfo)
+// 	userinfoUpdate, err = user.Get(Client, openId, lang)
+// 	if err != nil {
+// 		log.Println("controller UserHandler userUpdateFromWeiXin Error : ", err)
+// 		return nil, err
+// 	}
+// 	return userinfoUpdate, nil
+// }
 
-func JudgeUser(openid string, wid string) (has bool, err error) {
-	newuser := &models.User{
-		OpenId: openid,
-		Wid:    wid,
-	}
-	has, err = models.JudgeUser(newuser)
-	if err != nil && has == false {
-		return false, err
-	}
-	return true, nil
-}
+// func JudgeUser(openid string, wid string) (has bool, err error) {
+// 	newuser := &models.User{
+// 		OpenId: openid,
+// 		Wid:    wid,
+// 	}
+// 	has, err = models.JudgeUser(newuser)
+// 	if err != nil && has == false {
+// 		return false, err
+// 	}
+// 	return true, nil
+// }

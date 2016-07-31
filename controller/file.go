@@ -66,13 +66,13 @@ func UploadHandler(ctx *macaron.Context) string {
 	return "thanks"
 }
 
-func GetUser(openid string, wid string) (err error) {
-	newuser, err = models.GetUser(openid, wid)
-	if err != nil {
-		return err
-	}
-	return nil
-}
+// func GetUser(openid string, wid string) (err error) {
+// 	newuser, err = models.GetUser(openid, wid)
+// 	if err != nil {
+// 		return err
+// 	}
+// 	return nil
+// }
 
 func PrivideUserDir(username string) (err error) {
 	filepath := "attachment/" + username
