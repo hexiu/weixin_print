@@ -153,6 +153,9 @@ func main() {
 	m.Post("/fileup", controller.UploadHandler)
 	m.Get("/wx_callback", controller.WxCallbackHandler)
 	m.Post("/wx_callback", controller.WxCallbackHandler)
+	m.Get("/errorinfo", controller.ErrHandler)
+	m.Get("/allfileinfo", controller.ShowAllFileInfo)
+	m.Get("/delfile", controller.DelFileHandler)
 
 	err := os.Mkdir("attachment", os.ModePerm)
 	if err != nil {

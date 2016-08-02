@@ -1,11 +1,13 @@
+
 {{define "navbar"}}
-<div class="container">   
+<div class="container">
+    <a class="navbar-brand" href="/">{{.Title}}</a>
     <ul class="nav navbar-nav">
-        <!-- <a class="navbar-brand" href="/">{{.TITLE}}</a> -->
-        <li ><a class="navbar-brand" href="/">{{.TITLE}}</a></li>
         <li {{if .IsHome}}class="active"{{end}}><a href="/">首页</a> </li>
-        <li {{if .IsCategory}}class="active"{{end}}><a href="/category">分类</a> </li>
-        <li {{if .IsTopic}}class="active"{{end}}><a href="/topic">文章</a> </li>
+        <li {{if .IsAllFileInfo}}class="active"{{end}}><a href="/allfileinfo">文件列表</a> </li>
+        <li {{if .IsFileUpload}}class="active"{{end}}><a href="/file">文件上传</a></li>
+        <li {{if .IsUserInfo}}class="active"{{end}}><a href="/userinfo">用户个人信息</a></li>
+
     </ul>
 
 
@@ -13,7 +15,7 @@
         {{if .IsLogin}}
         <li><a href="/login?exit=true">退出</a></li>
         {{else}}
-        <li><a href="/login">微信登录</a></li>
+        <li><a href="/login">管理员登录</a></li>
 
         {{end}}
     </ul>

@@ -181,4 +181,22 @@ func initconf() {
 		log.Println(err)
 	}
 
+	//======================================================================
+	if ok, err := conf.GetValue("WebServerMsg", "Title"); err == nil {
+		Title = ok
+	} else {
+		log.Println(err)
+	}
+	if ok, err := conf.GetValue("WebServerMsg", "WebSiteName"); err == nil {
+		WebSiteName = ok
+	} else {
+		log.Println(err)
+	}
+	//======================================================================
+	if ok, err := conf.GetValue("SystemSet", "DelFile"); err == nil {
+		DelFile = ok
+	} else {
+		log.Println(err)
+	}
+
 }

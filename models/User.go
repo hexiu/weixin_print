@@ -19,18 +19,19 @@ type User struct {
 	FileSavePath       string  //用户文件存放地址
 	UploadFileNum      int64   //用户上传文件总数
 	PrintFileNum       int64   //用户已打印文件数
-	CreateTime         int64   `xorm:"index"` //用户创建时间
-	UpdateTime         int64   `xorm:"index"` //用户信息更新时间
-	NearUpdateFileTime int64   `xorm:"index"` //用户最近一次更新上传文件的时间
-	NotPrintFile       int     //没有打印的文件
-	Flag               int     //一个标识符（备用）
-	Nickname           string  //用户微信昵称
-	Sex                int     //用户微信性别
-	Language           string  //用户微信所用语言
-	City               string  //用户所在城市
-	Province           string  //用户省市
-	Country            string  //用户所在国家
-	IsSubscriber       int     //用户是否关注了微信号
+	CurFileNum         int64
+	CreateTime         int64  `xorm:"index"` //用户创建时间
+	UpdateTime         int64  `xorm:"index"` //用户信息更新时间
+	NearUpdateFileTime int64  `xorm:"index"` //用户最近一次更新上传文件的时间
+	NotPrintFile       int    //没有打印的文件
+	Flag               int    //一个标识符（备用）
+	Nickname           string //用户微信昵称
+	Sex                int    //用户微信性别
+	Language           string //用户微信所用语言
+	City               string //用户所在城市
+	Province           string //用户省市
+	Country            string //用户所在国家
+	IsSubscriber       int    //用户是否关注了微信号
 	Headimgurl         string
 	UnionId            string
 }
@@ -102,9 +103,14 @@ func NewUser() *User {
 
 func AddUser(user *User) (err error) {
 	connectDB()
-	dirname := "atttachment/" + user.OpenId
-	os.Mkdir(dirname, os.ModePerm)
+
+	dirname := "attachment/" + user.OpenId
+	err = os.Mkdir(dirname, os.ModePerm)
+	if err != nil {
+		log.Println(err)
+	}
 	user.FileSavePath = dirname
+	user.CurFileNum = 0
 	_, err = engine.Insert(user)
 	if err != nil {
 		return err

@@ -18,20 +18,27 @@ import (
 func AddMediaInfo(ctx *core.Context) (err error) {
 	newmediafile := new(models.FileInfo)
 	mediamsg := ctx.MixedMsg
+	getuser, err := models.GetUser(mediamsg.FromUserName)
+	if err != nil {
+		log.Println(err)
+	}
 	if mediamsg.MsgType == "image" {
 		newmediafile.Wid = mediamsg.ToUserName
 		newmediafile.OpenId = mediamsg.FromUserName
 		newmediafile.FileWherePath = "wx"
 		newmediafile.Fee = 1.00
 		newmediafile.FilePayInfo = false
-		newmediafile.FileUploadDate = string(time.Now().Year()) + string(time.Now().Month()) + string(time.Now().Day())
+		newmediafile.FileUploadDate = time.Now().String()[0:16]
 		newmediafile.FileUrl = mediamsg.PicURL
 		newmediafile.FileUploadTime = mediamsg.CreateTime
 		newmediafile.MediaId = mediamsg.MediaId
 		newmediafile.MsgId = mediamsg.MsgId
+		newmediafile.Flag = 0
 		newmediafile.FileType = "image"
+		newmediafile.PrintNum = 1
+		newmediafile.Id = getuser.Id
 	}
-	err = models.AddImageInfo(newmediafile)
+	err = models.AddFileInfo(newmediafile)
 	if err != nil {
 		log.Println("Controller Menu_Media Handler AddImageIndo Error : ", err)
 	}

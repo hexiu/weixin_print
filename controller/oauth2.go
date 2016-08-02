@@ -134,6 +134,7 @@ func GetWxInfoHandler(ctx *macaron.Context, sess session.Store) {
 	if !ExistUser(userinfo.OpenId) {
 		UserAddFromWebHandler()
 	}
+	sess.Set("openid", userinfo.OpenId)
 	ctx.Redirect("/file", 301)
 	return
 }

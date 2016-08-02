@@ -6,9 +6,12 @@ import (
 	"log"
 )
 
+var Title string = "维宝宝打印系统"
+var WebSiteName string = "维宝宝打印系统"
+
 func HomeHandler(ctx *macaron.Context, logger *log.Logger, sess session.Store) {
-	ctx.Data["TITLE"] = "维宝宝打印系统"
+	ctx.Data["Title"] = Title
 	log.Println(sess.ID())
-	ctx.Data["WebSiteName"] = "维宝宝打印系统"
+	ctx.Data["WebSiteName"] = WebSiteName
 	ctx.HTML(200, "home")
 }

@@ -8,6 +8,7 @@ import (
 
 type FileInfo struct {
 	Id             int64
+	Uid            int64
 	Wid            string
 	OpenId         string `xorm:"index"`
 	FileWherePath  string //标识文件存储位置：在互联网还是微信端。
@@ -19,13 +20,14 @@ type FileInfo struct {
 	FileType       string
 	MediaId        string
 	MsgId          int64
+	PrintNum       int
 	Fee            float64
 	FileUrl        string
 	Flag           int
 	FileUploadTime int64 `xorm:"index"`
 }
 
-func AddImageInfo(fileinfo *FileInfo) (err error) {
+func AddFileInfo(fileinfo *FileInfo) (err error) {
 	connectDB()
 	_, err = engine.Insert(fileinfo)
 	if err != nil {
@@ -39,7 +41,7 @@ func AddImageInfo(fileinfo *FileInfo) (err error) {
 func GetNotPrintFileInfo(openid, wid string) (fileinfolist []*FileInfo, err error) {
 	connectDB()
 	fileinfolist = make([]*FileInfo, 0)
-	err = engine.Where("wid = ? and open_id = ? and file_print_time = ? ", wid, openid, 0).Find(&fileinfolist)
+	err = engine.Where("wid = ? and open_id = ? and file_print_time = ? and flag = ? ", wid, openid, 0, 0).Find(&fileinfolist)
 	if err != nil {
 		return nil, err
 	}
@@ -50,7 +52,7 @@ func GetNotPrintFileInfo(openid, wid string) (fileinfolist []*FileInfo, err erro
 func GetAllFileInfo(openid, wid string) (fileinfolist []*FileInfo, err error) {
 	connectDB()
 	fileinfolist = make([]*FileInfo, 0)
-	err = engine.Where("wid = ? and open_id = ?", wid, openid).Find(&fileinfolist)
+	err = engine.Where("wid = ? and open_id = ? and flag = ? ", wid, openid, 0).Find(&fileinfolist)
 	if err != nil {
 		return nil, err
 	}
@@ -62,7 +64,7 @@ func GetAllFileInfo(openid, wid string) (fileinfolist []*FileInfo, err error) {
 func GetPrintFileInfo(openid, wid string) (fileinfolist []*FileInfo, err error) {
 	connectDB()
 	fileinfolist = make([]*FileInfo, 0)
-	err = engine.Where("wid = ? and open_id = ? and file_print_time > ?", wid, openid, 1).Find(&fileinfolist)
+	err = engine.Where("wid = ? and open_id = ? and file_print_time > ? and flag = ? ", wid, openid, 1, 0).Find(&fileinfolist)
 	if err != nil {
 		return nil, err
 	}
@@ -73,7 +75,7 @@ func GetPrintFileInfo(openid, wid string) (fileinfolist []*FileInfo, err error) 
 func GetPayNotPrintFileInfo(openid, wid string, payinfo bool) (fileinfolist []*FileInfo, err error) {
 	connectDB()
 	fileinfolist = make([]*FileInfo, 0)
-	err = engine.Where("wid = ? and open_id = ?  and file_print_time = ? and file_pay_info = ?", wid, openid, 0, payinfo).Find(&fileinfolist)
+	err = engine.Where("wid = ? and open_id = ?  and file_print_time = ? and file_pay_info = ? and flag = ? ", wid, openid, 0, payinfo, 0).Find(&fileinfolist)
 	if err != nil {
 		return nil, err
 	}
@@ -100,4 +102,27 @@ func (f *FileInfo) SetFilePayInfo(payinfo bool) {
 		log.Println("[Database Insert Error (FileInfo Updated): ]", err)
 	}
 	defer engine.Close()
+}
+
+func GetFileInfo(id int64) (fileinfo *FileInfo, err error) {
+	connectDB()
+	defer engine.Close()
+	fileinfo = &FileInfo{
+		Id: id,
+	}
+	_, err = engine.Get(fileinfo)
+	if err != nil {
+		return nil, err
+	}
+	return fileinfo, nil
+}
+
+func UpdateFileInfo(fileinfo *FileInfo) (err error) {
+	connectDB()
+	defer engine.Close()
+	_, err = engine.Update(fileinfo)
+	if err != nil {
+		return err
+	}
+	return nil
 }

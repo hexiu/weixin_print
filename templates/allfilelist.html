@@ -1,0 +1,51 @@
+{{template "header" .}}
+<div class="container">
+    <h1>已上传文件信息</h1>
+    <form method="GET" action="/category">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>文件标号</th>
+                    <th>文件名称</th>
+                    <th>文件上传日期</th>
+                    <th>文件查看</th>
+                    <th>付款信息</th>
+                    <th>文件删除</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{range .FileInfoList}}
+                <tr>
+                    <ol>
+                        <th>{{.Id}}</th>
+                    </ol>
+                    <th>{{.FileName}}</th>
+                    <th>{{.FileUploadDate}}</th>
+                    <th>
+                        <a href="{{.FileUrl}}" >查看</a>
+                    </th>
+                    {{if .FilePayInfo}}
+                    <th>已付款</th>
+                    {{else}}
+                    <th>
+                        <a href="{{.FileUrl}}" >付款</a>
+                    </th>
+                    {{end}}
+                    <th>
+                        <a href="/delfile?op=del&id={{.Id}}" >删除</a>
+                    </th>
+                </tr>
+                {{end}}
+            </tbody>
+        </table>
+    </form>
+
+</div>
+
+<script type="text/javascript" src="http://cdn.staticfile.org/jquery/3.0.0-alpha1/jquery.min.js"></script>
+<script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
+
+<!-- <script type="text/javascript" src=""></script>
+-->
+</body>
+</html>
