@@ -6,7 +6,7 @@ import (
 )
 
 type PayInfo struct {
-	Zid           int64 `xorm:"index autoincr"`
+	Id            int64
 	Wid           string
 	OpenId        string `xorm:"index"`
 	PrintFile     string

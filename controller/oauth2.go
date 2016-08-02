@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"encoding/json"
+	// "encoding/json"
 	"fmt"
 	// "github.com/chanxuehong/rand"
 	// "github.com/chanxuehong/sid"
@@ -125,13 +125,15 @@ func GetWxInfoHandler(ctx *macaron.Context, sess session.Store) {
 
 	userinfo, err = mpoauth2.GetUserInfo(token.AccessToken, token.OpenId, "", nil)
 	if err != nil {
-		// io.WriteString(ctx.Resp, err.Error())
+		io.WriteString(ctx.Resp, err.Error())
 		log.Println(err)
 		return
 	}
-	json.NewEncoder(ctx.Resp).Encode(userinfo)
+	// json.NewEncoder(ctx.Resp).Encode(userinfo)
 	log.Printf("userinfo: %+v\r\n", userinfo)
-
+	if !ExistUser(userinfo.OpenId) {
+		UserAddFromWebHandler()
+	}
 	ctx.Redirect("/file", 301)
 	return
 }

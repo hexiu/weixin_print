@@ -1,25 +1,14 @@
 package controller
 
 import (
-	// "encoding/json"
 	"fmt"
-	// "github.com/chanxuehong/rand"
-	// "github.com/chanxuehong/sid"
-	// mpoauth2 "github.com/chanxuehong/wechat.v2/mp/oauth2"
 	"github.com/chanxuehong/wechat.v2/mp/core"
-	// "github.com/chanxuehong/wechat.v2/oauth2"
-	// "github.com/go-macaron/session"
-	// "gopkg.in/macaron.v1"
-	// "io"
-	"log"
-	"net/http"
-	// "net/url"
-	// "time"
-	"strconv"
-	"weixin_dayin/modules/initConf"
-	// "weixin_dayin/models"
 	"github.com/chanxuehong/wechat.v2/mp/menu"
 	"github.com/chanxuehong/wechat.v2/mp/message/callback/request"
+	"log"
+	"net/http"
+	// "strconv"
+	"weixin_dayin/modules/initConf"
 )
 
 const (
@@ -79,113 +68,6 @@ var (
 func init() {
 	conf, err = initConf.InitConf()
 	if err != nil {
-		log.Println(err)
-	}
-	if ok, err := conf.GetValue("Session", "Provider"); err == nil {
-		provider = ok
-	} else {
-		log.Println(err)
-	}
-
-	if ok, err := conf.GetValue("Session", "ProviderConfig"); err == nil {
-		providerConfig = ok
-	} else {
-		log.Println(err)
-	}
-
-	if ok, err := conf.GetValue("Session", "CookieName"); err == nil {
-		cookieName = ok
-	} else {
-		log.Println(err)
-	}
-
-	if ok, err := conf.GetValue("Session", "CookiePath"); err == nil {
-		cookiePath = ok
-	} else {
-		log.Println(err)
-	}
-
-	if ok, err := conf.GetValue("Session", "Gclifetime"); err == nil {
-		log.Println(err)
-		rel, err := strconv.Atoi(ok)
-		if err != nil {
-			log.Println(err)
-		}
-		gclifetime = int64(rel)
-	} else {
-		log.Println(err)
-	}
-
-	if ok, err := conf.GetValue("Session", "Maxlifetime"); err == nil {
-		rel, err := strconv.Atoi(ok)
-		if err != nil {
-			log.Println(err)
-		}
-		maxlifetime = int64(rel)
-	} else {
-		log.Println(err)
-	}
-
-	if ok, err := conf.GetValue("Session", "Secure"); err == nil {
-		if ok == "true" {
-			secure = true
-		} else {
-			secure = false
-		}
-
-	} else {
-		log.Println(err)
-	}
-
-	if ok, err := conf.GetValue("Session", "CookieLifeTime"); err == nil {
-		rel, err := strconv.Atoi(ok)
-		if err != nil {
-			log.Println(err)
-		}
-		cookieLifeTime = rel
-	} else {
-		log.Println(err)
-	}
-
-	if ok, err := conf.GetValue("Session", "Domain"); err == nil {
-		domain = ok
-	} else {
-		log.Println(err)
-	}
-
-	if ok, err := conf.GetValue("Session", "IDLength"); err == nil {
-		rel, err := strconv.Atoi(ok)
-		if err != nil {
-			log.Println(err)
-		}
-		iDLength = rel
-	} else {
-		log.Println(err)
-	}
-
-	if ok, err := conf.GetValue("Session", "Section"); err == nil {
-		section = ok
-	} else {
-		log.Println(err)
-	}
-	if ok, err := conf.GetValue("Server", "WebSiteUrl"); err == nil {
-		webSiteUrl = ok
-	} else {
-		log.Println(err)
-	}
-	if ok, err := conf.GetValue("Oauth2", "Oauth2Url"); err == nil {
-		oauth2Url = ok
-	} else {
-		log.Println(err)
-	}
-	if ok, err := conf.GetValue("Oauth2", "Oauth2RedirectURI"); err == nil {
-		Oauth2RedirectURI = ok
-	} else {
-		log.Println(err)
-	}
-	if ok, err := conf.GetValue("Oauth2", "Oauth2Scope"); err == nil {
-		Oauth2Scope = ok
-	} else {
 		log.Println(err)
 	}
 

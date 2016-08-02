@@ -7,7 +7,7 @@ import (
 )
 
 type FileInfo struct {
-	Fid            uint32 `xorm:"index autoincr "`
+	Id             int64
 	Wid            string
 	OpenId         string `xorm:"index"`
 	FileWherePath  string //标识文件存储位置：在互联网还是微信端。
@@ -19,6 +19,7 @@ type FileInfo struct {
 	FileType       string
 	MediaId        string
 	MsgId          int64
+	Fee            float64
 	FileUrl        string
 	Flag           int
 	FileUploadTime int64 `xorm:"index"`

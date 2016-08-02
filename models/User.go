@@ -3,11 +3,12 @@ package models
 import (
 	// "fmt"
 	"log"
+	"os"
 	// "time"
 )
 
 type User struct {
-	Uid                int64   `xorm:"index" autoincr` //用户唯一标识自增ID，方便管理
+	Id                 int64   //用户唯一标识自增ID，方便管理
 	Wid                string  //微信公众号标识ID
 	OpenId             string  `xorm:"index"` //用户对于公众号的唯一标识ID
 	Username           string  //用户名（说明：姓名）
@@ -30,6 +31,8 @@ type User struct {
 	Province           string  //用户省市
 	Country            string  //用户所在国家
 	IsSubscriber       int     //用户是否关注了微信号
+	Headimgurl         string
+	UnionId            string
 }
 
 func (user *User) GetCreateTime() int64 {
@@ -49,7 +52,7 @@ func (user *User) GetFlag() int {
 }
 
 func (user *User) GetUid() int64 {
-	return user.Uid
+	return user.Id
 }
 
 func (user *User) GetWid() string {
@@ -99,10 +102,14 @@ func NewUser() *User {
 
 func AddUser(user *User) (err error) {
 	connectDB()
+	dirname := "atttachment/" + user.OpenId
+	os.Mkdir(dirname, os.ModePerm)
+	user.FileSavePath = dirname
 	_, err = engine.Insert(user)
 	if err != nil {
 		return err
 	}
+
 	defer engine.Close()
 
 	return nil
@@ -136,10 +143,9 @@ func JudgeUser(user *User) (has bool, err error) {
 	return has, nil
 }
 
-func GetUser(openid string, wid string) (user *User, err error) {
+func GetUser(openid string) (user *User, err error) {
 	connectDB()
 	user = &User{
-		Wid:    wid,
 		OpenId: openid,
 	}
 
