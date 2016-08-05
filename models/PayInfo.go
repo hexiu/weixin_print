@@ -6,8 +6,8 @@ import (
 )
 
 type PayInfo struct {
-	Id            int64
-	Uid           int64
+	Id int64
+	// Uid           int64
 	Fid           int64
 	Wid           string
 	OpenId        string `xorm:"index"`

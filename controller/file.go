@@ -80,12 +80,12 @@ func UploadHandler(ctx *macaron.Context, sess session.Store, log *log.Logger) {
 		fileinfo.FileName = attachmentFilename
 		fileinfo.FilePayInfo = false
 		fileinfo.FileWherePath = "local"
-		fileinfo.FileUrl = webSiteUrl + "/" + getuser.FileSavePath + "/" + attachmentFilename
+		fileinfo.FileUrl = webSiteUrl + "/" + getuser.OpenId + "/" + attachmentFilename
 		fileinfo.FileType = filetype
 		fileinfo.PrintNum = printnum
 		fileinfo.FileUploadTime = time.Now().Unix()
 		fileinfo.Flag = 0
-		fileinfo.Uid = getuser.Id
+		// fileinfo.Uid = getuser.Id //
 		fileinfo.FileUploadDate = time.Now().String()[0:16]
 		if filetype == "image" {
 			fileinfo.Fee = 1.00

@@ -7,8 +7,8 @@ import (
 )
 
 type FileInfo struct {
-	Id             int64
-	Uid            int64
+	Id int64
+	// Uid            int64
 	Wid            string
 	OpenId         string `xorm:"index"`
 	FileWherePath  string //标识文件存储位置：在互联网还是微信端。

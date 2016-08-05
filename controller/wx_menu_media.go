@@ -1,7 +1,7 @@
 package controller
 
 import (
-	// "fmt"
+	"fmt"
 	// "github.com/Unknwon/goconfig"
 	"github.com/chanxuehong/wechat.v2/mp/core"
 	// "github.com/chanxuehong/wechat.v2/mp/menu"
@@ -18,10 +18,12 @@ import (
 func AddMediaInfo(ctx *core.Context) (err error) {
 	newmediafile := new(models.FileInfo)
 	mediamsg := ctx.MixedMsg
+	fmt.Println(mediamsg.FromUserName, ctx.MixedMsg, "          ", ctx)
 	getuser, err := models.GetUser(mediamsg.FromUserName)
 	if err != nil {
 		log.Println(err)
 	}
+	fmt.Println(getuser)
 	if mediamsg.MsgType == "image" {
 		newmediafile.Wid = mediamsg.ToUserName
 		newmediafile.OpenId = mediamsg.FromUserName
@@ -36,7 +38,7 @@ func AddMediaInfo(ctx *core.Context) (err error) {
 		newmediafile.Flag = 0
 		newmediafile.FileType = "image"
 		newmediafile.PrintNum = 1
-		newmediafile.Id = getuser.Id
+		// newmediafile.Id = getuser.Id
 	}
 	err = models.AddFileInfo(newmediafile)
 	if err != nil {

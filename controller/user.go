@@ -33,6 +33,19 @@ func init() {
 
 func UserAddFromWeiXinHandler(ctx *core.Context) {
 	// newuser := models.NewUser()
+	getuser := &models.User{
+		OpenId: ctx.MixedMsg.FromUserName,
+	}
+	jud, err := models.JudgeUser(getuser)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	if jud {
+		log.Println("have User :", getuser)
+		return
+	}
+
 	newuser := new(models.User)
 	msg := ctx.MixedMsg
 
@@ -47,6 +60,9 @@ func UserAddFromWeiXinHandler(ctx *core.Context) {
 	newuser.TotalConsumption = 0
 
 	userinfo, err := userUpdateFromWeiXin(newuser.OpenId, lang)
+	if err != nil {
+		log.Println("controller UserHandler userUpdateFromWeiXin Error : ", err)
+	}
 
 	newuser.Nickname = userinfo.Nickname
 	newuser.Sex = userinfo.Sex
@@ -57,9 +73,6 @@ func UserAddFromWeiXinHandler(ctx *core.Context) {
 	newuser.Headimgurl = userinfo.HeadImageURL
 	newuser.UnionId = userinfo.UnionId
 	newuser.Province = userinfo.Province
-	if err != nil {
-		log.Println("controller UserHandler userUpdateFromWeiXin Error : ", err)
-	}
 
 	err = models.AddUser(newuser)
 	if err != nil {
@@ -70,6 +83,19 @@ func UserAddFromWeiXinHandler(ctx *core.Context) {
 }
 
 func UserAddFromWebHandler() {
+	getuser := &models.User{
+		OpenId: userinfo.OpenId,
+	}
+	jud, err := models.JudgeUser(getuser)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	if jud {
+		log.Println("have User :", getuser)
+		return
+	}
+
 	newuser := models.NewUser()
 	newuser.OpenId = userinfo.OpenId
 	newuser.CreateTime = time.Now().Unix()

@@ -18,6 +18,21 @@ var (
 	port   string = Port
 )
 
+type TxMsg struct {
+	OpenId   string
+	MsgType  string
+	FileType string
+	MsgInfo  string
+	MsgURL   string
+	Time     string
+}
+
+var TxChan = make(chan TxMsg, 5)
+
+type ClientInfo map[string]string
+
+var ClientList = make(map[string]string, 0)
+
 func init() {
 	conf, err := initConf.InitConf()
 	if err != nil {
@@ -54,7 +69,8 @@ func doServerStuff(conn net.Conn) {
 	nameInfo := make([]byte, 512) //生成一个缓存数组
 	_, err := conn.Read(nameInfo)
 	checkError(err)
-	fmt.Println(conn.RemoteAddr())
+	// fmt.Println(conn.RemoteAddr())
+	ClientList[conn.RemoteAddr().String()] = "connect"
 	for {
 		buf := make([]byte, 512)
 		_, err := conn.Read(buf) //读取客户机发的消息
@@ -62,10 +78,33 @@ func doServerStuff(conn net.Conn) {
 		if flag == 0 {
 			break
 		}
-		fmt.Println(string(buf)) //打印出来
-		conn.Write(buf)
-	}
 
+		msginfo := fmt.Sprintln(string(buf))
+		midinfo := msginfo[1:]
+		midinfo = strings.Replace(midinfo, "}", " ", 1)
+		info := strings.Fields(midinfo)
+		msg := new(TxMsg)
+		msg.OpenId = info[0]
+		msg.MsgType = info[1]
+		msg.FileType = info[2]
+		msg.MsgInfo = info[3]
+		msg.MsgURL = info[4]
+		msg.PrintCode = info[5]
+		msgtime := info[6]
+		msg.Time, err = strconv.ParseInt(msgtime, 10, 64)
+		if err != nil {
+			log.Println(err)
+		}
+		if msg.MsgInfo == "quit" {
+			return
+		}
+
+		fmt.Println(string(buf)) //打印出来
+		MsgInfo := <-TxChan
+		msgInfo := fmt.Sprintf("%v", MsgInfo)
+		fmt.Println(msgInfo, ClientList)
+		conn.Write([]byte(msgInfo))
+	}
 	return
 }
 

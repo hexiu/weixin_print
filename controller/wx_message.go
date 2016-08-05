@@ -8,6 +8,7 @@ import (
 	"github.com/chanxuehong/wechat.v2/mp/message/callback/response"
 	"log"
 	"net/http"
+	// "strings"
 	// "strconv"
 	"gopkg.in/macaron.v1"
 	// "weixin_dayin/modules/initConf"
@@ -64,8 +65,13 @@ func defaultMsgHandler(ctx *core.Context) {
 func menuClickEventHandler(ctx *core.Context) {
 	log.Printf("收到菜单 click 事件:\n%s\n", ctx.MsgPlaintext)
 	event := menu.GetClickEvent(ctx.MixedMsg)
-	resp := response.NewText(event.FromUserName, event.ToUserName, event.CreateTime, "收到 click 类型的事件")
-	ctx.RawResponse(resp) // 明文回复
+	if event.EventKey == "print_start" {
+		printStartHandler(ctx, event)
+	}
+	fmt.Println("*********************************", event)
+
+	//resp := response.NewText(event.FromUserName, event.ToUserName, event.CreateTime, "收到 click 类型的事件")
+	//ctx.RawResponse(resp) // 明文回复
 	// ctx.AESResponse(resp, 0, "", nil) // aes密文回复
 	// DeleteMenu()
 
@@ -74,7 +80,16 @@ func menuClickEventHandler(ctx *core.Context) {
 func defaultEventHandler(ctx *core.Context) {
 	log.Printf("收到事件:\n%s\n", ctx.MsgPlaintext)
 	msg := ctx.MixedMsg
-
+	if ctx.MixedMsg.EventType == "scancode_waitmsg" {
+		event := menu.GetClickEvent(msg)
+		info := event.EventKey
+		if info == "print_code" {
+			printCodeHandler(ctx, event)
+		}
+		if event.EventKey == "print_ok" {
+			printOkHandler(ctx, event)
+		}
+	}
 	if ctx.MixedMsg.EventType == "subscribe" {
 		if !ExistUser(msg.FromUserName) {
 			UserAddFromWeiXinHandler(ctx)

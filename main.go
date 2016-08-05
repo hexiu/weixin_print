@@ -10,7 +10,7 @@ import (
 	"strconv"
 	"weixin_dayin/controller"
 	"weixin_dayin/models"
-	"weixin_dayin/modules/NetSendPrintMsg"
+	// "weixin_dayin/modules/NetSendPrintMsg"
 	"weixin_dayin/modules/initConf"
 )
 
@@ -89,8 +89,7 @@ func init() {
 	}
 	conf, err = initConf.InitConf()
 	initconf()
-	go NetSendPrintMsg.StartServer()
-
+	go controller.StartServer()
 }
 
 func main() {
@@ -98,6 +97,7 @@ func main() {
 
 	//Register middle key
 	m.Use(macaron.Renderer())
+	m.Use(macaron.Static("attachment"))
 	m.Use(session.Sessioner(session.Options{
 		Provider: provider,
 		// 提供器的配置，根据提供器而不同
@@ -153,9 +153,14 @@ func main() {
 	m.Post("/fileup", controller.UploadHandler)
 	m.Get("/wx_callback", controller.WxCallbackHandler)
 	m.Post("/wx_callback", controller.WxCallbackHandler)
+	m.Get("/wxpay", controller.WxpayHandler)
+	m.Post("/wxpay", controller.WxpayHandler)
+
 	m.Get("/errorinfo", controller.ErrHandler)
 	m.Get("/allfileinfo", controller.ShowAllFileInfo)
 	m.Get("/delfile", controller.DelFileHandler)
+	m.Get("/tx", controller.TxHandler)
+	m.Post("/tx", controller.TxHandler)
 
 	err := os.Mkdir("attachment", os.ModePerm)
 	if err != nil {
@@ -163,6 +168,7 @@ func main() {
 	}
 
 	m.Run(port)
+
 }
 
 // 初始化主机的配置文件

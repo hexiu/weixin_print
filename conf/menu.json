@@ -4,15 +4,21 @@
             "name": "扫码", 
             "sub_button": [
                 {
-                    "type": "scancode_waitmsg", 
-                    "name": "扫码带提示", 
-                    "key": "rselfmenu_0_0", 
+                    "type": "click", 
+                    "name": "开始打印", 
+                    "key": "print_start", 
                     "sub_button": [ ]
                 }, 
                 {
-                    "type": "scancode_push", 
-                    "name": "扫码推事件", 
-                    "key": "rselfmenu_0_1", 
+                    "type": "scancode_waitmsg", 
+                    "name": "扫码打印机", 
+                    "key": "print_code", 
+                    "sub_button": [ ]
+                },
+                {  
+                    "type":"scancode_waitmsg",
+                    "name":"扫码确认",
+                    "key":"print_ok",
                     "sub_button": [ ]
                 }
             ]

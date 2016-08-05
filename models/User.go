@@ -18,7 +18,8 @@ type User struct {
 	TotalConsumption   float64 //用户消费的总额度
 	FileSavePath       string  //用户文件存放地址
 	UploadFileNum      int64   //用户上传文件总数
-	PrintFileNum       int64   //用户已打印文件数
+	PrintCode          string
+	PrintFileNum       int64 //用户已打印文件数
 	CurFileNum         int64
 	CreateTime         int64  `xorm:"index"` //用户创建时间
 	UpdateTime         int64  `xorm:"index"` //用户信息更新时间
@@ -103,7 +104,7 @@ func NewUser() *User {
 
 func AddUser(user *User) (err error) {
 	connectDB()
-
+	user.PrintCode = "0"
 	dirname := "attachment/" + user.OpenId
 	err = os.Mkdir(dirname, os.ModePerm)
 	if err != nil {
@@ -117,7 +118,6 @@ func AddUser(user *User) (err error) {
 	}
 
 	defer engine.Close()
-
 	return nil
 }
 
@@ -166,7 +166,7 @@ func GetUser(openid string) (user *User, err error) {
 
 func UpdateUserInfo(user *User) (err error) {
 	connectDB()
-	_, err = engine.Update(user)
+	_, err = engine.Id(user.Id).Update(user)
 	if err != nil {
 		return err
 	}
