@@ -87,6 +87,8 @@ func init() {
 	Client = core.NewClient(TokenServer, http.DefaultClient)
 	fmt.Println(WxAppSecret, WxAppId, TokenServer)
 	CreateMenu()
+	UpdateUserListFromWeiXin()
+
 	// SessionStorage, err = session.NewManager("memory", session.Options{})
 	// fmt.Println("Test:", SessionStorage, err)
 	// if err != nil {

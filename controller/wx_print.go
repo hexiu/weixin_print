@@ -20,7 +20,7 @@ func printStartHandler(ctx *core.Context, event *menu.ClickEvent) {
 	respMsg := "*创昕小印* 已经接受到打印请求，请您耐心等待，谢谢您的配合，祝您使用愉快  "
 	resp := response.NewText(event.FromUserName, event.ToUserName, event.CreateTime, respMsg)
 	ctx.RawResponse(resp)
-	fileinfos, err := models.GetNotPrintFileInfo(event.FromUserName, event.ToUserName)
+	fileinfos, err := models.GetNotPrintFileInfo(event.FromUserName)
 	if err != nil {
 		log.Println(err)
 	}
@@ -62,7 +62,7 @@ func clientQuit(printCode string) {
 }
 
 func printCodeHandler(ctx *core.Context, event *menu.ClickEvent) {
-	fileinfos, err := models.GetNotPrintFileInfo(event.FromUserName, event.ToUserName)
+	fileinfos, err := models.GetNotPrintFileInfo(event.FromUserName)
 	if err != nil {
 		log.Println(err)
 	}

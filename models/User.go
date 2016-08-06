@@ -19,12 +19,10 @@ type User struct {
 	FileSavePath       string  //用户文件存放地址
 	UploadFileNum      int64   //用户上传文件总数
 	PrintCode          string
-	PrintFileNum       int64 //用户已打印文件数
-	CurFileNum         int64
+	PrintFileNum       int64  //用户已打印文件数
 	CreateTime         int64  `xorm:"index"` //用户创建时间
 	UpdateTime         int64  `xorm:"index"` //用户信息更新时间
 	NearUpdateFileTime int64  `xorm:"index"` //用户最近一次更新上传文件的时间
-	NotPrintFile       int    //没有打印的文件
 	Flag               int    //一个标识符（备用）
 	Nickname           string //用户微信昵称
 	Sex                int    //用户微信性别
@@ -93,10 +91,6 @@ func (user *User) GetPrintFileNum() int64 {
 	return user.PrintFileNum
 }
 
-func (user *User) GetNoPrintFile() int {
-	return user.NotPrintFile
-}
-
 func NewUser() *User {
 	user := new(User)
 	return user
@@ -111,7 +105,6 @@ func AddUser(user *User) (err error) {
 		log.Println(err)
 	}
 	user.FileSavePath = dirname
-	user.CurFileNum = 0
 	_, err = engine.Insert(user)
 	if err != nil {
 		return err
@@ -196,8 +189,4 @@ func (u *User) SetTotalConsumption(totalConsumption float64) {
 
 func (u *User) SetPrintFileNum(printFileNum int64) {
 	u.PrintFileNum = printFileNum
-}
-
-func (u *User) SetNoPrintFile(noPrintFile int) {
-	u.NotPrintFile = noPrintFile
 }

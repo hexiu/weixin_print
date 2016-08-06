@@ -78,6 +78,7 @@ func menuClickEventHandler(ctx *core.Context) {
 }
 
 func defaultEventHandler(ctx *core.Context) {
+	// judgeAndAddUser(ctx)
 	log.Printf("收到事件:\n%s\n", ctx.MsgPlaintext)
 	msg := ctx.MixedMsg
 	if ctx.MixedMsg.EventType == "scancode_waitmsg" {

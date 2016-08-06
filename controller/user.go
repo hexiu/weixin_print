@@ -55,7 +55,6 @@ func UserAddFromWeiXinHandler(ctx *core.Context) {
 	newuser.Flag = 0
 	newuser.UpdateTime = time.Now().Unix()
 	newuser.PrintFileNum = 0
-	newuser.NotPrintFile = 0
 	newuser.UploadFileNum = 0
 	newuser.TotalConsumption = 0
 
@@ -102,7 +101,6 @@ func UserAddFromWebHandler() {
 	newuser.Flag = 0
 	newuser.UpdateTime = time.Now().Unix()
 	newuser.PrintFileNum = 0
-	newuser.NotPrintFile = 0
 	newuser.UploadFileNum = 0
 	newuser.TotalConsumption = 0
 	newuser.Nickname = userinfo.Nickname
@@ -132,6 +130,10 @@ func userUpdateFromWeiXin(openId string, lang string) (userinfo *user.UserInfo, 
 		return nil, err
 	}
 	return userinfo, nil
+}
+
+func userlistUpdateFromWeiXin() {
+	// user.BatchGet(Client, openIdList, lang)
 }
 
 func GetUser(openid string) (err error) {
@@ -181,6 +183,7 @@ func UserUpdateFormWeiXin(ctx *core.Context) {
 	if err != nil {
 		log.Println(err)
 	}
+
 }
 
 func ChageSubscribe(openid string, status int) {
@@ -193,4 +196,43 @@ func ChageSubscribe(openid string, status int) {
 	if err != nil {
 		log.Println(err)
 	}
+}
+
+func UpdateUserListFromWeiXin() {
+	openIdList, err := user.List(Client, "")
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	log.Println("OpenId List : ", openIdList.Data.OpenIdList)
+	userinfoList, err := user.BatchGet(Client, openIdList.Data.OpenIdList, lang)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	for _, v := range userinfoList {
+		updaeUserTableUserInfo(&v)
+	}
+
+}
+
+func updaeUserTableUserInfo(v *user.UserInfo) {
+	if !ExistUser(v.OpenId) {
+		newuser := new(models.User)
+		newuser.OpenId = v.OpenId
+		newuser.Language = v.Language
+		newuser.UnionId = v.UnionId
+		newuser.IsSubscriber = v.IsSubscriber
+		newuser.Headimgurl = v.HeadImageURL
+		newuser.City = v.City
+		newuser.Country = v.Country
+		newuser.Nickname = v.Nickname
+		newuser.Province = v.Province
+		newuser.Sex = v.Sex
+		err = models.AddUser(newuser)
+		if err != nil {
+			log.Println(err)
+		}
+	}
+	return
 }

@@ -27,7 +27,7 @@ func WxpayHandler(ctx *macaron.Context) {
 
 func WxPayHandler(ctx *core.Context) {
 	req.DeviceInfo = "WEB"
-	req.NonceStr = ""
+	req.NonceStr = "" //随机字符串，不长于32位。NOTE: 如果为空则系统会自动生成一个随机字符串。
 	req.Body = "打印文件支付"
 	req.Detail = "文件名称"
 	req.Attach = "附加数据，在查询API和支付通知中原样返回，该字段主要用于商户携带订单的自定义数据"

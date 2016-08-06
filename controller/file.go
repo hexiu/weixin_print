@@ -63,7 +63,9 @@ func UploadHandler(ctx *macaron.Context, sess session.Store, log *log.Logger) {
 		if err != nil {
 			log.Println(err)
 		}
-		if getuser.CurFileNum > 20 {
+		filelists, _ := models.GetNotPrintFileInfo(getuser.OpenId)
+		CurFileNum := len(filelists)
+		if CurFileNum > 20 {
 			errinfo = "您未付款的打印文件过多，已超过预设值，请对文件付款或者删除之后再次上传，谢谢您的配合"
 			gotourl = WebSiteUrl + "/filelist"
 			ctx.Redirect("/errorinfo", 301)
@@ -75,7 +77,7 @@ func UploadHandler(ctx *macaron.Context, sess session.Store, log *log.Logger) {
 			err.Error()
 		}
 		fileinfo := new(models.FileInfo)
-		fileinfo.Wid = getuser.Wid
+
 		fileinfo.OpenId = userinfo.OpenId
 		fileinfo.FileName = attachmentFilename
 		fileinfo.FilePayInfo = false
@@ -98,7 +100,6 @@ func UploadHandler(ctx *macaron.Context, sess session.Store, log *log.Logger) {
 		}
 
 		getuser.UploadFileNum = getuser.UploadFileNum + 1
-		getuser.CurFileNum = getuser.CurFileNum + 1
 		err = models.UpdateUserInfo(getuser)
 		if err == nil {
 			log.Println(err)
@@ -122,7 +123,7 @@ func ShowAllFileInfo(ctx *macaron.Context, log *log.Logger, sess session.Store) 
 		log.Println(err)
 	}
 	fmt.Println("UserInfo:", getuser)
-	fileinfolist, err := models.GetAllFileInfo(getuser.OpenId, getuser.Wid)
+	fileinfolist, err := models.GetAllFileInfo(getuser.OpenId)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -158,12 +159,7 @@ func DelFileHandler(ctx *macaron.Context, log *log.Logger, sess session.Store) {
 			}
 		}
 		fileinfo.Flag = 1
-		getuser, err := models.GetUser(fileinfo.OpenId)
-		if err != nil {
-			log.Println(err)
-		}
-		getuser.CurFileNum = getuser.CurFileNum - 1
-		models.UpdateUserInfo(getuser)
+
 		models.UpdateFileInfo(fileinfo)
 		ctx.Redirect("/allfileinfo", 301)
 	}

@@ -29,6 +29,7 @@ func AddMediaInfo(ctx *core.Context) (err error) {
 		newmediafile.OpenId = mediamsg.FromUserName
 		newmediafile.FileWherePath = "wx"
 		newmediafile.Fee = 1.00
+		newmediafile.FileName = "wx_image"
 		newmediafile.FilePayInfo = false
 		newmediafile.FileUploadDate = time.Now().String()[0:16]
 		newmediafile.FileUrl = mediamsg.PicURL
