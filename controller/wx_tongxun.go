@@ -7,6 +7,7 @@ import (
 	"net" //支持通讯的包
 	"strconv"
 	"strings"
+	"sync"
 	"weixin_dayin/modules/initConf"
 )
 
@@ -30,6 +31,8 @@ type TxMsg struct {
 	PrintNum  int64
 	Time      int64
 }
+
+var mutex sync.Mutex
 
 var TxChan = make(chan TxMsg, 5)
 
@@ -117,7 +120,9 @@ func doServerStuff(conn net.Conn) {
 			delete(ClientList, conn.RemoteAddr().String())
 			return
 		}
+		mutex.Lock()
 		MsgInfo := <-TxChan
+		mutex.Unlock()
 		msgInfo := fmt.Sprintf("%v", MsgInfo)
 		fmt.Println(msgInfo, ClientList)
 		conn.Write([]byte(msgInfo))

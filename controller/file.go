@@ -2,6 +2,7 @@ package controller
 
 import (
 	"fmt"
+	"github.com/go-macaron/captcha"
 	"github.com/go-macaron/session"
 	"gopkg.in/macaron.v1"
 	"log"
@@ -32,14 +33,21 @@ func FileHandler(ctx *macaron.Context, log *log.Logger, sess session.Store) {
 	}
 }
 
-func UploadHandler(ctx *macaron.Context, sess session.Store, log *log.Logger) {
+func UploadHandler(ctx *macaron.Context, sess session.Store, log *log.Logger, cpt *captcha.Captcha) {
 	sid := ctx.GetCookie(cookieName)
 	if sid != sess.ID() {
 		errinfo = "你还没有登录哦！"
 		gotourl = webSiteUrl
 		ctx.Redirect("/errorinfo", 301)
 	}
-	filetype = ctx.Req.FormValue("filetype")
+
+	if !cpt.VerifyReq(ctx.Req) {
+		errinfo = "验证码错误！"
+		gotourl = webSiteUrl
+		ctx.Redirect(webSiteUrl+"/file", 301)
+	}
+
+	filetype := ctx.Req.FormValue("filetype")
 	printNum := ctx.Req.FormValue("printnum")
 	if len(printNum) != 0 {
 		printnum, err = strconv.Atoi(printNum)
@@ -116,6 +124,7 @@ func ShowAllFileInfo(ctx *macaron.Context, log *log.Logger, sess session.Store) 
 		gotourl = webSiteUrl
 		ctx.Redirect("/errorinfo", 301)
 	}
+	ctx.Data["WxPayUrl"] = WebSiteUrl + "/wxpay"
 	ctx.Data["IsAllFileInfo"] = true
 	fmt.Println("User Flag:", sess.Get("openid"))
 	getuser, err := models.GetUser(fmt.Sprintf("%v", sess.Get("openid")))

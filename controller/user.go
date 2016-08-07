@@ -132,10 +132,6 @@ func userUpdateFromWeiXin(openId string, lang string) (userinfo *user.UserInfo, 
 	return userinfo, nil
 }
 
-func userlistUpdateFromWeiXin() {
-	// user.BatchGet(Client, openIdList, lang)
-}
-
 func GetUser(openid string) (err error) {
 	getuser, err := models.GetUser(openid)
 	if err != nil {

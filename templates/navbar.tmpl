@@ -1,23 +1,53 @@
 
 {{define "navbar"}}
-<div class="container">
-    <a class="navbar-brand" href="/">{{.Title}}</a>
-    <ul class="nav navbar-nav">
-        <li {{if .IsHome}}class="active"{{end}}><a href="/">首页</a> </li>
+
+<!-- header section -->
+<section class="banner" role="banner">
+  <header id="header">
+    <div class="header-content clearfix"> <a class="logo" href="index.html">{{.Title}}</a>
+    <!--   <nav class="navigation" role="navigation">
+        <ul class="primary-nav">
+        <li {{if .IsHome}}class="active"{{end}}><a href="/">首页</a> </li>  <li><a href="#services">Services</a></li>
         <li {{if .IsAllFileInfo}}class="active"{{end}}><a href="/allfileinfo">文件列表</a> </li>
         <li {{if .IsFileUpload}}class="active"{{end}}><a href="/file">文件上传</a></li>
         <li {{if .IsUserInfo}}class="active"{{end}}><a href="/userinfo">用户个人信息</a></li>
+          <li><a href="#content-3-10">About</a></li> 
+          <li><a href="#gallery">Gallery</a></li>
+          <li><a href="#teams">Our Team</a></li>
+          <li><a href="#testimonials">Testimonials</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+       </nav> -->
+    <nav class="navigation" role="navigation">
+        <ul class="primary-nav">
+         <li><a href="#banner">Home</a></li>
+          <li><a href="/file#services">Services</a></li>
+          <li><a href="#content-3-10">About</a></li> 
+          <li><a href="#gallery">Gallery</a></li>
+          <li><a href="#teams">Our Team</a></li>
+          <li><a href="#testimonials">Testimonials</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+    
 
-    </ul>
+      <a href="#" class="nav-toggle">Menu<span></span></a> 
+      </div>
+  </header>
+    <!-- banner text --> 
+      <div class="banner" id="banner"> 
+      <ul class="cb-slideshow">
+            <li><span>Image 01</span><div><h3>POTRATE</h3></div></li>
+            <li><span>Image 02</span><div><h3>CLICKING</h3></div></li>
+            <li><span>Image 03</span><div><h3>PASSION</h3></div></li>
+            <li><span>Image 04</span><div><h3>AWESOME</h3></div></li>
+            <li><span>Image 05</span><div><h3>SELFE</h3></div></li>
+            <li><span>Image 06</span><div><h3>NATURE</h3></div></li>
+        </ul>
+    <!-- banner text --> 
+    </div> 
+</section>
+<!-- header section --> 
 
 
-    <ul class="nav navbar-nav navbar-right">
-        {{if .IsLogin}}
-        <li><a href="/login?exit=true">退出</a></li>
-        {{else}}
-        <li><a href="/login">管理员登录</a></li>
-
-        {{end}}
-    </ul>
-</div>
 {{end}}

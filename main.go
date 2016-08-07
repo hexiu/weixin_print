@@ -11,6 +11,8 @@ import (
 	"weixin_dayin/controller"
 	"weixin_dayin/models"
 	// "weixin_dayin/modules/NetSendPrintMsg"
+	"github.com/go-macaron/cache"
+	"github.com/go-macaron/captcha"
 	"weixin_dayin/modules/initConf"
 )
 
@@ -98,6 +100,9 @@ func main() {
 	//Register middle key
 	m.Use(macaron.Renderer())
 	m.Use(macaron.Static("attachment"))
+	m.Use(cache.Cacher())
+	m.Use(captcha.Captchaer())
+
 	m.Use(session.Sessioner(session.Options{
 		Provider: provider,
 		// 提供器的配置，根据提供器而不同
@@ -153,8 +158,10 @@ func main() {
 	m.Post("/fileup", controller.UploadHandler)
 	m.Get("/wx_callback", controller.WxCallbackHandler)
 	m.Post("/wx_callback", controller.WxCallbackHandler)
-	m.Get("/wxpay", controller.WxpayHandler)
+	m.Get("/wxpay", controller.WxPayHandler)
 	m.Post("/wxpay", controller.WxpayHandler)
+	m.Get("/wxpayrel", controller.WxPayRelHandler)
+	m.Post("/wxpayrel", controller.WxPayRelHandler)
 
 	m.Get("/errorinfo", controller.ErrHandler)
 	m.Get("/allfileinfo", controller.ShowAllFileInfo)

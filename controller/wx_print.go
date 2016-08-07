@@ -41,7 +41,9 @@ func printStartHandler(ctx *core.Context, event *menu.ClickEvent) {
 		msg.PrintCode = printCode
 		msg.PrintNum = int64(length)
 		msg.Time = time.Now().Unix()
+		mutex.Lock()
 		TxChan <- *msg
+		mutex.Unlock()
 		fmt.Println(msg)
 	}
 	clientQuit(printCode)
@@ -58,7 +60,9 @@ func clientQuit(printCode string) {
 	msg.MsgType = "connect"
 	msg.PrintNum = 0
 	msg.MsgInfo = "quit"
+	mutex.Lock()
 	TxChan <- *msg
+	mutex.Unlock()
 }
 
 func printCodeHandler(ctx *core.Context, event *menu.ClickEvent) {
@@ -82,7 +86,9 @@ func printCodeHandler(ctx *core.Context, event *menu.ClickEvent) {
 	msg.PrintCode = printCode
 	msg.PrintNum = int64(length)
 	msg.Time = time.Now().Unix()
+	mutex.Lock()
 	TxChan <- *msg
+	mutex.Unlock()
 	fmt.Println("msg:", msg)
 	ctx.RawResponse(resp)
 	getuser, err := models.GetUser(event.FromUserName)
