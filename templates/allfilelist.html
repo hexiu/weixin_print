@@ -1,7 +1,8 @@
 {{template "header" .}}
 <div class="container">
+<section id="content-3-10">
+
     <h1>已上传文件信息</h1>
-    <form method="GET" action="/category">
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -28,7 +29,7 @@
                     <th>已付款</th>
                     {{else}}
                     <th>
-                        <a href="{{.WxPayUrl}}" >付款</a>
+                        <a href="/wxpay" >付款</a>
                     </th>
                     {{end}}
                     <th>
@@ -38,11 +39,9 @@
                 {{end}}
             </tbody>
         </table>
-    </form>
-
+    
+</section>
 </div>
 
-<script type="text/javascript" src="http://cdn.staticfile.org/jquery/3.0.0-alpha1/jquery.min.js"></script>
-<script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
 
 {{template "footer" .}}
