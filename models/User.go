@@ -8,16 +8,16 @@ import (
 )
 
 type User struct {
-	Id                 int64   //用户唯一标识自增ID，方便管理
-	Wid                string  //微信公众号标识ID
-	OpenId             string  `xorm:"index"` //用户对于公众号的唯一标识ID
-	Username           string  //用户名（说明：姓名）
-	Password           string  //用户密码（留用）
-	Email              string  //用户邮箱
-	Telnumber          string  //用户手机
-	TotalConsumption   float64 //用户消费的总额度
-	FileSavePath       string  //用户文件存放地址
-	UploadFileNum      int64   //用户上传文件总数
+	Id                 int64  //用户唯一标识自增ID，方便管理
+	Wid                string //微信公众号标识ID
+	OpenId             string `xorm:"index"` //用户对于公众号的唯一标识ID
+	Username           string //用户名（说明：姓名）
+	Password           string //用户密码（留用）
+	Email              string //用户邮箱
+	Telnumber          string //用户手机
+	TotalConsumption   int64  //用户消费的总额度
+	FileSavePath       string //用户文件存放地址
+	UploadFileNum      int64  //用户上传文件总数
 	PrintCode          string
 	PrintFileNum       int64  //用户已打印文件数
 	CreateTime         int64  `xorm:"index"` //用户创建时间
@@ -75,7 +75,7 @@ func (user *User) GetEmail() string {
 	return user.Email
 }
 
-func (user *User) GetTotalConsumption() float64 {
+func (user *User) GetTotalConsumption() int64 {
 	return user.TotalConsumption
 }
 
@@ -183,7 +183,7 @@ func (u *User) SetPassword(password string) {
 	u.Password = password
 }
 
-func (u *User) SetTotalConsumption(totalConsumption float64) {
+func (u *User) SetTotalConsumption(totalConsumption int64) {
 	u.TotalConsumption = totalConsumption
 }
 

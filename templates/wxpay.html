@@ -1,46 +1,99 @@
 
 {{template "header" .}}
-	<div class="index_box">
+
+
+
+ 
+
+ 
+
+<!-- 	</div>
+	 <button style="width:210px; height:30px; background-color:#FE6714; border:0px #FE6714 solid; cursor: pointer;  color:white;  font-size:16px;" type="button" onclick="pay()" >贡献一下</button>
+ -->
+	 <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+
+<script type="text/javascript">
+
+ wx.config({
+      "debug": false,
+      "appId": "{{.AppId}}",
+      "nonceStr": "{{.NonceStr}}",
+      "signature": "{{.WxConfigSign}}",
+      "timeStamp": "{{.TimeStamp}}",
+  
+        jsApiList: [
+            'chooseWXPay',
+           ] // 必填，需要使用的JS接口列表
+        });
+ 
+        //通过ready接口处理成功验证
+        wx.ready(function () {
+            // config信息验证后会执行ready方法，所有接口调用都必须在config接口获得结果之后
+ 
+            // document.querySelector('#getBrandWCPayRequest').onclick = function () {
+                wx.chooseWXPay({
+                   // "appId" : "{{.AppId}}",    
+		           timestamp: "{{.TimeStamp}}",         // 时间戳，自1970年以来的秒数
+		           nonceStr : "{{.NonceStr}}", //随机串
+		           package :  "{{.Pg}}",     
+		           signType : "{{.SignType}}",         //微信签名方式:     
+		           paySign : "{{.PaySign}}",   //微信签名 
+
+                 success: function (res) {
+                     if (res.err_msg == "get_brand_wcpay_request:ok") {
+                         alert("支付成功");
+                         // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。 
+                     }
+                     else if (res.err_msg == "get_brand_wcpay_request:cancel") {
+                         alert("cancel");
+                         // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。 
+                     }
+                     else if (res.err_msg == "get_brand_wcpay_request:fail") {
+                         alert("fail",res.err_msg);
+                         // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。 
+                     }
+                 }
+                });
+            // };
+        });
+    </script>
+
+
+<!-- 下面为点击打印支付。 -->
+<!-- 		<div class="index_box">
 		<div class="apply_name">微信js支付测试</div>
-		
+	</div>
 		
 		<div class="branch_con">
 			<ul>
 				<li><span class="name">测试支付信息</span></li>
 			</ul>
-			<p class="cz_btn"><a href="javascript:pay();" class="btn_1">立即支付</a></p>
-		</div>
-	</div>
 
-	<script type="text/javascript" src="../js/zepto.min.js"></script>
-	<script type="text/javascript" src="../js/common.js"></script>
-	<script type="text/javascript">
+			<p class="cz_btn"><a href="javascript:pay();" class="btn_1">立即支付</a></p>
+		
+		</div>
+		<script type="text/javascript">
 	 
-	var appId = urlparameter("appId");
-	var timeStamp = urlparameter("timeStamp");
-	var nonceStr = urlparameter("nonceStr");
-	var pg = urlparameter("pg");
-	var signType = urlparameter("signType");
-	var paySign = urlparameter("paySign");
-	
-	
+
 	  function onBridgeReady(){
 		 
 		   WeixinJSBridge.invoke(
 		       'getBrandWCPayRequest', {
-		           "appId" : {{.AppId}},     //公众号名称，由商户传入     
-		           "timeStamp": {{.TimeStamp}},         //时间戳，自1970年以来的秒数     
-		           "nonceStr" : {{.NonceStr}}, //随机串     
-		           "package" : "prepay_id=" + {{.Pg}},     
-		           "signType" : {{.SignType}},         //微信签名方式:     
-		           "paySign" : {{.PaySign}}   //微信签名 
+		           "appId" : "{{.AppId}}",     //公众号名称，由商户传入     
+		           "nonceStr" :"{{.NonceStr}}" , //随机串     
+		           "package" : "{{.Pg}}",     
+		           "signType" : "{{.SignType}}",         //微信签名方式:     
+		           "timestamp": "{{.TimeStamp}}",         //时间戳，自1970年以来的秒数     
+		           "paySign" : "{{.PaySign}}"   //微信签名 
 		       },
 		       
 		       function(res){     
+
 		           if(res.err_msg == "get_brand_wcpay_request:ok" ) {
 		        	   
 		        	   alert("支付成功");
-		           }     // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。 
+		           }
+		           alert(res.err_msg);     // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。 
 		       }
 		   ); 
 		}
@@ -60,5 +113,7 @@
 			} 
 	    	
 	    }
-	</script>
+	</script> -->
+
+
 {{template "footer" .}}

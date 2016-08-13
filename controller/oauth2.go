@@ -111,8 +111,8 @@ func GetWxInfoHandler(ctx *macaron.Context, sess session.Store) {
 		return
 	}
 	// fmt.Println(queryState, sessionid)
-	oauth2Endpoint = mpoauth2.NewEndpoint(WxAppId, WxAppSecret)
-	oauth2Client := oauth2.Client{
+	oauth2Endpoint := mpoauth2.NewEndpoint(WxAppId, WxAppSecret)
+	oauth2Client := &oauth2.Client{
 		Endpoint: oauth2Endpoint,
 	}
 	token, err := oauth2Client.ExchangeToken(code)

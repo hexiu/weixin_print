@@ -25,6 +25,7 @@ func FileHandler(ctx *macaron.Context, log *log.Logger, sess session.Store) {
 	ctx.Data["IsFileUpload"] = true
 
 	if sess.ID() == sid {
+		ctx.Data["Title"] = "打印文件上传"
 		ctx.HTML(200, "index")
 	} else {
 		errinfo = "你还没有登录哦！"
@@ -95,10 +96,11 @@ func UploadHandler(ctx *macaron.Context, sess session.Store, log *log.Logger, cp
 		fileinfo.PrintNum = printnum
 		fileinfo.FileUploadTime = time.Now().Unix()
 		fileinfo.Flag = 0
+		fileinfo.OutTradeNo = strconv.Itoa(int(time.Now().Unix())) + strconv.Itoa(int(time.Now().UnixNano()))
 		// fileinfo.Uid = getuser.Id //
 		fileinfo.FileUploadDate = time.Now().String()[0:16]
 		if filetype == "image" {
-			fileinfo.Fee = 1.00
+			fileinfo.Fee = 100
 		} else {
 			// fileinfo.Fee =
 		}

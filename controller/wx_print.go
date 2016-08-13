@@ -11,6 +11,7 @@ import (
 	// "strconv"
 	// "gopkg.in/macaron.v1"
 	// "strings"
+	"os"
 	"time"
 	"weixin_dayin/models"
 	// "weixin_dayin/modules/NetSendPrintMsg"
@@ -20,7 +21,7 @@ func printStartHandler(ctx *core.Context, event *menu.ClickEvent) {
 	respMsg := "*创昕小印* 已经接受到打印请求，请您耐心等待，谢谢您的配合，祝您使用愉快  "
 	resp := response.NewText(event.FromUserName, event.ToUserName, event.CreateTime, respMsg)
 	ctx.RawResponse(resp)
-	fileinfos, err := models.GetNotPrintFileInfo(event.FromUserName)
+	fileinfos, err := models.GetPayNotPrintFileInfo(event.FromUserName, true)
 	if err != nil {
 		log.Println(err)
 	}
@@ -41,9 +42,26 @@ func printStartHandler(ctx *core.Context, event *menu.ClickEvent) {
 		msg.PrintCode = printCode
 		msg.PrintNum = int64(length)
 		msg.Time = time.Now().Unix()
-		mutex.Lock()
+		// mutex.Lock()
 		TxChan <- *msg
-		mutex.Unlock()
+		// mutex.Unlock()
+
+		fileinfos[i].FilePrintTime = time.Now().Unix()
+		if DelFile == "true" && fileinfos[i].FileWherePath == "local" {
+			filepath := "attachment" + fileinfos[i].OpenId + fileinfos[i].FileName
+			err = os.Remove(filepath)
+			if err != nil {
+				log.Println(err)
+			}
+			fileinfos[i].Flag = 2
+		} else {
+			fileinfos[i].Flag = 1
+		}
+		err := models.UpdateFileInfo(fileinfos[i])
+		if err != nil {
+			log.Println("Print Handler Update FileInfo PrintInfo Error : ", err)
+		}
+
 		fmt.Println(msg)
 	}
 	clientQuit(printCode)
@@ -60,9 +78,9 @@ func clientQuit(printCode string) {
 	msg.MsgType = "connect"
 	msg.PrintNum = 0
 	msg.MsgInfo = "quit"
-	mutex.Lock()
+	// mutex.Lock()
 	TxChan <- *msg
-	mutex.Unlock()
+	// mutex.Unlock()
 }
 
 func printCodeHandler(ctx *core.Context, event *menu.ClickEvent) {
@@ -86,9 +104,9 @@ func printCodeHandler(ctx *core.Context, event *menu.ClickEvent) {
 	msg.PrintCode = printCode
 	msg.PrintNum = int64(length)
 	msg.Time = time.Now().Unix()
-	mutex.Lock()
+	// mutex.Lock()
 	TxChan <- *msg
-	mutex.Unlock()
+	// mutex.Unlock()
 	fmt.Println("msg:", msg)
 	ctx.RawResponse(resp)
 	getuser, err := models.GetUser(event.FromUserName)

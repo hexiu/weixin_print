@@ -158,8 +158,8 @@ func main() {
 	m.Post("/fileup", controller.UploadHandler)
 	m.Get("/wx_callback", controller.WxCallbackHandler)
 	m.Post("/wx_callback", controller.WxCallbackHandler)
-	m.Get("/wxpay", controller.WxPayHandler)
-	m.Post("/wxpay", controller.WxPayHandler)
+	m.Get("/wxpay/wxpay/wxpay", controller.WxPayHandler)
+	m.Post("/wxpay/wxpay/wxpay", controller.WxPayHandler)
 	m.Get("/wxpayrel", controller.WxPayRelHandler)
 	m.Post("/wxpayrel", controller.WxPayRelHandler)
 

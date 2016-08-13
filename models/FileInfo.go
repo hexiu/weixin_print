@@ -21,9 +21,10 @@ type FileInfo struct {
 	MediaId        string
 	MsgId          int64
 	PrintNum       int
-	Fee            float64
+	Fee            int64
 	FileUrl        string
 	Flag           int
+	OutTradeNo     string
 	FileUploadTime int64 `xorm:"index"`
 }
 
@@ -117,9 +118,21 @@ func GetFileInfo(id int64) (fileinfo *FileInfo, err error) {
 	return fileinfo, nil
 }
 
+func UpdatePayFileInfo(oid string) (err error) {
+	connectDB()
+	defer engine.Close()
+	sql := "update `file_info` set file_pay_info = ? where out_trade_no = ?"
+	_, err = engine.Exec(sql, 1, oid)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func UpdateFileInfo(fileinfo *FileInfo) (err error) {
 	connectDB()
 	defer engine.Close()
+	log.Println("models Fileinfo:", fileinfo)
 	_, err = engine.Id(fileinfo.Id).Update(fileinfo)
 	if err != nil {
 		return err

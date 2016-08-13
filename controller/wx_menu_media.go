@@ -9,7 +9,7 @@ import (
 	// "github.com/chanxuehong/wechat.v2/mp/message/callback/response"
 	"log"
 	// "net/http"
-	// "strconv"
+	"strconv"
 	"time"
 	"weixin_dayin/models"
 	// "weixin_connect/modules/initConf"
@@ -28,7 +28,7 @@ func AddMediaInfo(ctx *core.Context) (err error) {
 		newmediafile.Wid = mediamsg.ToUserName
 		newmediafile.OpenId = mediamsg.FromUserName
 		newmediafile.FileWherePath = "wx"
-		newmediafile.Fee = 1.00
+		newmediafile.Fee = 100
 		newmediafile.FileName = "wx_image"
 		newmediafile.FilePayInfo = false
 		newmediafile.FileUploadDate = time.Now().String()[0:16]
@@ -37,6 +37,8 @@ func AddMediaInfo(ctx *core.Context) (err error) {
 		newmediafile.MediaId = mediamsg.MediaId
 		newmediafile.MsgId = mediamsg.MsgId
 		newmediafile.Flag = 0
+		newmediafile.OutTradeNo = strconv.Itoa(int(time.Now().Unix())) + strconv.Itoa(int(time.Now().UnixNano()))
+
 		newmediafile.FileType = "image"
 		newmediafile.PrintNum = 1
 		// newmediafile.Id = getuser.Id

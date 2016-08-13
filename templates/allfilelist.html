@@ -2,7 +2,7 @@
 <div class="container">
 <section id="content-3-10">
 
-    <h1>已上传文件信息</h1>
+    <h3>已上传文件信息</h3>
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -29,7 +29,7 @@
                     <th>已付款</th>
                     {{else}}
                     <th>
-                        <a href="/wxpay" >付款</a>
+                        <a href="http://wxpay.jaxiu.cn/wxpay/wxpay/wxpay?op=pay&id={{.Id}}" >付款</a>
                     </th>
                     {{end}}
                     <th>

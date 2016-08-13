@@ -1,13 +1,14 @@
 package controller
 
 import (
-	"fmt"
+	// "fmt"
 	"github.com/chanxuehong/wechat.v2/mp/core"
 	"github.com/chanxuehong/wechat.v2/mp/menu"
 	"github.com/chanxuehong/wechat.v2/mp/message/callback/request"
 	"log"
 	"net/http"
 	// "strconv"
+	paycore "github.com/chanxuehong/wechat.v2/mch/core"
 	"weixin_dayin/modules/initConf"
 )
 
@@ -81,13 +82,17 @@ func init() {
 
 	msgHandler = mux
 	msgServer = core.NewServer(WxOriId, WxAppId, WxToken, WxEncodedAESKey, msgHandler, nil)
-	fmt.Println(msgServer)
+	// fmt.Println(msgServer)
 
 	TokenServer = core.NewDefaultAccessTokenServer(WxAppId, WxAppSecret, nil)
 	Client = core.NewClient(TokenServer, http.DefaultClient)
-	fmt.Println(WxAppSecret, WxAppId, TokenServer)
+	// fmt.Println(WxAppSecret, WxAppId, TokenServer)
 	CreateMenu()
 	UpdateUserListFromWeiXin()
+	//-----Pay ----//
+	wxpayServer = paycore.NewServer(WxAppId, mchId, apiKey, wxpayHandler, nil)
+	wxpayClient = paycore.NewClient(WxAppId, mchId, apiKey, nil)
+	tokenServer = core.NewDefaultAccessTokenServer(WxAppId, WxAppSecret, http.DefaultClient)
 
 	// SessionStorage, err = session.NewManager("memory", session.Options{})
 	// fmt.Println("Test:", SessionStorage, err)
@@ -126,8 +131,4 @@ func init() {
 	// go SessionStorage.GC()
 	// SessionMange = SessionStorage
 	// sess.GC()
-}
-
-func test() {
-	fmt.Println("...")
 }
