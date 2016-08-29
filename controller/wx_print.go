@@ -32,6 +32,9 @@ func printStartHandler(ctx *core.Context, event *menu.ClickEvent) {
 	}
 	fmt.Println("Print Handler user : ", getuser)
 	printCode := getuser.PrintCode
+	if length == 0 {
+		clientQuit(printCode)
+	}
 	for i := 0; i < length; i++ {
 		msg := new(TxMsg)
 		msg.FileType = fileinfos[i].FileType
@@ -47,8 +50,9 @@ func printStartHandler(ctx *core.Context, event *menu.ClickEvent) {
 		// mutex.Unlock()
 
 		fileinfos[i].FilePrintTime = time.Now().Unix()
+		fileinfos[i].FilePrintDate = time.Now().String()[:16]
 		if DelFile == "true" && fileinfos[i].FileWherePath == "local" {
-			filepath := "attachment" + fileinfos[i].OpenId + fileinfos[i].FileName
+			filepath := "attachment" + "/" + fileinfos[i].OpenId + "/" + fileinfos[i].FileName
 			err = os.Remove(filepath)
 			if err != nil {
 				log.Println(err)

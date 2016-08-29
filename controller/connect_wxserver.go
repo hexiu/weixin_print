@@ -9,8 +9,8 @@ import (
 
 var (
 	// 微信对接相关变量
-	WxAppId         string = "wxa9e9c5e110b8665d"
-	WxAppSecret     string = "e9a7f50077fdcbf9b689e629678e244a"
+	WxAppId         string = ""
+	WxAppSecret     string = ""
 	WxOriId         string = ""
 	WxToken         string
 	WxEncodedAESKey string = ""

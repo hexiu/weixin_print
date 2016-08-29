@@ -172,7 +172,8 @@ func WxPayHandler(ctx *macaron.Context, sess session.Store) {
 		ctx.Data["PaySign"] = paySign
 
 		// fmt.Println(req.NonceStr, resp.TradeType, paySign)
-		ctx.Redirect("/allfileinfo", 301)
+		// ctx.Redirect("/allfileinfo", 301)
+		ctx.HTML(200, "wxpay")
 	} else {
 		errinfo = "Error op!"
 		gotourl = WebSiteUrl

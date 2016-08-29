@@ -11,8 +11,10 @@ import (
 	"weixin_dayin/controller"
 	"weixin_dayin/models"
 	// "weixin_dayin/modules/NetSendPrintMsg"
+	"github.com/go-macaron/binding"
 	"github.com/go-macaron/cache"
 	"github.com/go-macaron/captcha"
+
 	"weixin_dayin/modules/initConf"
 )
 
@@ -155,7 +157,7 @@ func main() {
 	m.Get("/page2", controller.GetWxInfoHandler)
 	m.Get("/", controller.HomeHandler)
 	m.Get("/file", controller.FileHandler)
-	m.Post("/fileup", controller.UploadHandler)
+	m.Post("/fileup", binding.MultipartForm(controller.UploadForm{}), controller.UploadHandler)
 	m.Get("/wx_callback", controller.WxCallbackHandler)
 	m.Post("/wx_callback", controller.WxCallbackHandler)
 	m.Get("/wxpay/wxpay/wxpay", controller.WxPayHandler)
@@ -168,6 +170,8 @@ func main() {
 	m.Get("/delfile", controller.DelFileHandler)
 	m.Get("/tx", controller.TxHandler)
 	m.Post("/tx", controller.TxHandler)
+	m.Get("/payok", controller.WxPayFileHandler)
+	m.Post("/payok", controller.WxPayFileHandler)
 
 	err := os.Mkdir("attachment", os.ModePerm)
 	if err != nil {

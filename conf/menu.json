@@ -1,24 +1,18 @@
 {
     "button": [
         {
-            "name": "扫码", 
-            "sub_button": [
-                {
-                    "type": "click", 
-                    "name": "开始打印", 
-                    "key": "print_start", 
-                    "sub_button": [ ]
-                }, 
+            "name": "打印文件", 
+            "sub_button": [     
                 {
                     "type": "scancode_waitmsg", 
                     "name": "扫码打印机", 
                     "key": "print_code", 
                     "sub_button": [ ]
-                },
-                {  
-                    "type":"scancode_waitmsg",
-                    "name":"扫码确认",
-                    "key":"print_ok",
+                },         
+                {
+                    "type": "click", 
+                    "name": "开始打印", 
+                    "key": "print_start", 
                     "sub_button": [ ]
                 }
             ]
@@ -31,13 +25,7 @@
                     "name": "系统拍照发图", 
                     "key": "rselfmenu_1_0", 
                    "sub_button": [ ]
-                 }, 
-                {
-                    "type": "pic_photo_or_album", 
-                    "name": "拍照或者相册发图", 
-                    "key": "rselfmenu_1_1", 
-                    "sub_button": [ ]
-                }, 
+                 },  
                 {
                     "type": "pic_weixin", 
                     "name": "微信相册发图", 
@@ -47,10 +35,32 @@
             ]
         }, 
         {
-            "name": "用户中心", 
-            "type": "view",
-            "url":"http://wxpay.jaxiu.cn/page1", 
-            "key": "rselfmenu_2_0"
+            "name": "用户中心",
+            "sub_button": [
+                {
+                    "type": "view", 
+                    "name":"用户认证",
+                    "url": "http://wxpay.jaxiu.cn/page1", 
+                    "key": "rselfmenu_2_0", 
+                    "sub_button": [ ]
+                 },  
+                {
+                    "type": "view", 
+                    "name":"文件上传",
+                    "url": "http://wxpay.jaxiu.cn/file", 
+                    "key": "rselfmenu_2_0", 
+                    "sub_button": [ ]
+                },
+                {
+                    "type": "view", 
+                    "name":"文件支付",
+                    "url": "http://wxpay.jaxiu.cn/allfileinfo", 
+                    "key": "rselfmenu_2_0", 
+                    "sub_button": [ ]
+                 }
+ 
+            ] 
+
         }
     ]
 }

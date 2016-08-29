@@ -1,0 +1,39 @@
+{{template "header" .}}
+<div class="container">
+<section id="content-3-10">
+
+    <h3>已上传文件信息</h3>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>文件标号</th>
+                    <th>文件名称</th>
+                    <th>文件日期</th>
+                    <th>文件查看</th>
+                    <th>打印日期</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{range .FileInfoList}}
+                <tr>
+                    <ol>
+                        <th>{{.Id}}</th>
+                    </ol>
+                    <th>{{.FileName}}</th>
+                    <th>{{.FileUploadDate}}</th>
+                    <th>
+                        <a href="{{.FileUrl}}" >查看</a>
+                    </th>
+                    <th>
+                        {{.FilePrintDate}}
+                    </th>
+                </tr>
+                {{end}}
+            </tbody>
+        </table>
+    
+</section>
+</div>
+
+
+{{template "footer" .}}

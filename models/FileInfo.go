@@ -16,6 +16,7 @@ type FileInfo struct {
 	FileReName     string
 	FileUploadDate string
 	FilePrintTime  int64
+	FilePrintDate  string
 	FilePayInfo    bool
 	FileType       string
 	MediaId        string
@@ -65,7 +66,8 @@ func GetAllFileInfo(openid string) (fileinfolist []*FileInfo, err error) {
 func GetPrintFileInfo(openid string) (fileinfolist []*FileInfo, err error) {
 	connectDB()
 	fileinfolist = make([]*FileInfo, 0)
-	err = engine.Where("open_id = ? and file_print_time > ? and flag = ? ", openid, 1, 0).Find(&fileinfolist)
+
+	err = engine.Where("open_id = ? and file_print_date is not null and file_pay_info = ?", openid, 1).Find(&fileinfolist)
 	if err != nil {
 		return nil, err
 	}

@@ -95,13 +95,17 @@ func RegisterDB() (err error) {
 	if ok, _ := engine.IsTableExist("User"); !ok {
 		engine.CreateTables(new(User))
 	}
-
 	if ok, _ := engine.IsTableExist("FileInfo"); !ok {
 		engine.CreateTables(new(FileInfo))
 	}
 
 	if ok, _ := engine.IsTableExist("PayInfo"); !ok {
 		engine.CreateTables(new(PayInfo))
+	}
+
+	err = engine.Sync2(new(User), new(FileInfo), new(PayInfo))
+	if err != nil {
+		return err
 	}
 
 	defer engine.Close()

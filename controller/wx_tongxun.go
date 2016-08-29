@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+	"time"
 	"weixin_dayin/modules/initConf"
 )
 
@@ -120,6 +121,14 @@ func doServerStuff(conn net.Conn) {
 			delete(ClientList, conn.RemoteAddr().String())
 			return
 		}
+		go func(conn net.Conn, msg *TxMsg) {
+			time.Sleep(60 * time.Second)
+			if _, ok := ClientList[conn.RemoteAddr().String()]; ok {
+				clientQuit(msg.PrintCode)
+				delete(ClientList, conn.RemoteAddr().String())
+				conn.Close()
+			}
+		}(conn, msg)
 		mutex.Lock()
 		MsgInfo := <-TxChan
 		mutex.Unlock()
