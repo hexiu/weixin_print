@@ -129,12 +129,15 @@ func doServerStuff(conn net.Conn) {
 				conn.Close()
 			}
 		}(conn, msg)
-		mutex.Lock()
-		MsgInfo := <-TxChan
-		mutex.Unlock()
-		msgInfo := fmt.Sprintf("%v", MsgInfo)
-		fmt.Println(msgInfo, ClientList)
-		conn.Write([]byte(msgInfo))
+		if MsgInfo.PrintCode == msg.PrintCode {
+			mutex.Lock()
+			MsgInfo := <-TxChan
+			mutex.Unlock()
+			msgInfo := fmt.Sprintf("%v", MsgInfo)
+			fmt.Println(msgInfo, ClientList)
+			conn.Write([]byte(msgInfo))
+
+		}
 	}
 	return
 }

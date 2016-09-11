@@ -5,13 +5,13 @@
             "sub_button": [     
                 {
                     "type": "scancode_waitmsg", 
-                    "name": "扫码打印机", 
+                    "name": "扫码打印", 
                     "key": "print_code", 
                     "sub_button": [ ]
                 },         
                 {
                     "type": "click", 
-                    "name": "开始打印", 
+                    "name": "----test----", 
                     "key": "print_start", 
                     "sub_button": [ ]
                 }
@@ -39,15 +39,8 @@
             "sub_button": [
                 {
                     "type": "view", 
-                    "name":"用户认证",
-                    "url": "http://wxpay.jaxiu.cn/page1", 
-                    "key": "rselfmenu_2_0", 
-                    "sub_button": [ ]
-                 },  
-                {
-                    "type": "view", 
                     "name":"文件上传",
-                    "url": "http://wxpay.jaxiu.cn/file", 
+                    "url": "http://wxpay.jaxiu.cn/page1", 
                     "key": "rselfmenu_2_0", 
                     "sub_button": [ ]
                 },

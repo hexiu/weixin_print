@@ -17,6 +17,7 @@ import (
 	// "weixin_dayin/modules/NetSendPrintMsg"
 )
 
+// not use in 2016-09-01
 func printStartHandler(ctx *core.Context, event *menu.ClickEvent) {
 	respMsg := "*创昕小印* 已经接受到打印请求，请您耐心等待，谢谢您的配合，祝您使用愉快  "
 	resp := response.NewText(event.FromUserName, event.ToUserName, event.CreateTime, respMsg)
@@ -88,7 +89,7 @@ func clientQuit(printCode string) {
 }
 
 func printCodeHandler(ctx *core.Context, event *menu.ClickEvent) {
-	fileinfos, err := models.GetNotPrintFileInfo(event.FromUserName)
+	fileinfos, err := models.GetPayNotPrintFileInfo(event.FromUserName, true)
 	if err != nil {
 		log.Println(err)
 	}
@@ -121,6 +122,45 @@ func printCodeHandler(ctx *core.Context, event *menu.ClickEvent) {
 	getuser.PrintCode = printCode
 	fmt.Println("PrintCode Handler user : ", getuser)
 	models.UpdateUserInfo(getuser)
+
+	printCode = getuser.PrintCode
+	if length == 0 {
+		clientQuit(printCode)
+	}
+	for i := 0; i < length; i++ {
+		msg := new(TxMsg)
+		msg.FileType = fileinfos[i].FileType
+		msg.MsgInfo = "print_start"
+		msg.MsgType = "fileinfo"
+		msg.OpenId = fileinfos[i].OpenId
+		msg.MsgURL = fileinfos[i].FileUrl
+		msg.PrintCode = printCode
+		msg.PrintNum = int64(length)
+		msg.Time = time.Now().Unix()
+		// mutex.Lock()
+		TxChan <- *msg
+		// mutex.Unlock()
+
+		fileinfos[i].FilePrintTime = time.Now().Unix()
+		fileinfos[i].FilePrintDate = time.Now().String()[:16]
+		if DelFile == "true" && fileinfos[i].FileWherePath == "local" {
+			filepath := "attachment" + "/" + fileinfos[i].OpenId + "/" + fileinfos[i].FileName
+			err = os.Remove(filepath)
+			if err != nil {
+				log.Println(err)
+			}
+			fileinfos[i].Flag = 2
+		} else {
+			fileinfos[i].Flag = 1
+		}
+		err := models.UpdateFileInfo(fileinfos[i])
+		if err != nil {
+			log.Println("Print Handler Update FileInfo PrintInfo Error : ", err)
+		}
+
+		fmt.Println(msg)
+	}
+	clientQuit(printCode)
 }
 
 func printOkHandler(ctx *core.Context, event *menu.ClickEvent) {

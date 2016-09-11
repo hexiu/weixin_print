@@ -65,13 +65,13 @@ func defaultMsgHandler(ctx *core.Context) {
 func menuClickEventHandler(ctx *core.Context) {
 	log.Printf("收到菜单 click 事件:\n%s\n", ctx.MsgPlaintext)
 	event := menu.GetClickEvent(ctx.MixedMsg)
-	if event.EventKey == "print_start" {
-		printStartHandler(ctx, event)
-	}
-	fmt.Println("*********************************", event)
+	// if event.EventKey == "print_start" {
+	// 	printStartHandler(ctx, event)
+	// }
+	// fmt.Println("*********************************", event)
 
-	//resp := response.NewText(event.FromUserName, event.ToUserName, event.CreateTime, "收到 click 类型的事件")
-	//ctx.RawResponse(resp) // 明文回复
+	resp := response.NewText(event.FromUserName, event.ToUserName, event.CreateTime, "收到 click 类型的事件")
+	ctx.RawResponse(resp) // 明文回复
 	// ctx.AESResponse(resp, 0, "", nil) // aes密文回复
 	// DeleteMenu()
 

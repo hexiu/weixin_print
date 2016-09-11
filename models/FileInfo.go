@@ -43,7 +43,7 @@ func AddFileInfo(fileinfo *FileInfo) (err error) {
 func GetNotPrintFileInfo(openid string) (fileinfolist []*FileInfo, err error) {
 	connectDB()
 	fileinfolist = make([]*FileInfo, 0)
-	err = engine.Where("open_id = ? and file_print_time = ? and flag = ? ", openid, 0, 0).Find(&fileinfolist)
+	err = engine.Where("open_id = ? and file_print_time is not null and flag = ? ", openid, 0, 0).Find(&fileinfolist)
 	if err != nil {
 		return nil, err
 	}
