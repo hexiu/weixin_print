@@ -136,7 +136,6 @@ func doServerStuff(conn net.Conn) {
 			msgInfo := fmt.Sprintf("%v", MsgInfo)
 			fmt.Println(msgInfo, ClientList)
 			conn.Write([]byte(msgInfo))
-
 		}
 	}
 	return
